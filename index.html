@@ -7,282 +7,241 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
-      --primary: #0066ff;
-      --primary-hover: #0052cc;
-      --bg: #f4f6f8;
-      --card-bg: #ffffff;
-      --text: #1a1a1a;
-      --text-muted: #666666;
-      --border: #e5e7eb;
+      --navy: #0A192F;
+      --gold: #D4AF37;
+      --gold-hover: #C5A028;
+      --bg-cream: #FAF9F6;
+      --card-bg: #FFFFFF;
+      --text: #1E293B;
+      --border: #E2E8F0;
     }
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      margin: 0;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body { 
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+      background-color: var(--bg-cream); 
+      color: var(--text); 
+      line-height: 1.6;
       padding: 20px;
     }
 
-    .header-nav {
-      max-width: 600px;
-      margin: 0 auto 20px auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    header {
+      text-align: center;
+      padding: 30px 10px;
+      background-color: var(--navy);
+      color: white;
+      border-radius: 12px 12px 0 0;
+      border-bottom: 4px solid var(--gold);
     }
 
-    .header-nav h1 {
-      margin: 0;
-      font-size: 24px;
-      color: var(--primary);
+    header h1 {
+      color: var(--gold);
+      font-size: 2.2rem;
+      letter-spacing: 1px;
     }
 
-    .track-link {
-      color: var(--primary);
+    header p {
+      color: #CBD5E1;
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+
+    .nav-links {
+      margin-top: 15px;
+    }
+
+    .nav-links a {
+      color: var(--gold);
       text-decoration: none;
       font-weight: 600;
-      font-size: 14px;
-      border: 1px solid var(--primary);
-      padding: 6px 12px;
-      border-radius: 6px;
-      transition: background 0.2s, color 0.2s;
+      font-size: 0.9rem;
+      border: 1px solid var(--gold);
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: all 0.2s;
     }
 
-    .track-link:hover {
-      background: var(--primary);
-      color: white;
+    .nav-links a:hover {
+      background-color: var(--gold);
+      color: var(--navy);
     }
 
-    .container {
+    .form-container {
       max-width: 600px;
-      margin: 0 auto;
+      margin: 0 auto 40px auto;
       background: var(--card-bg);
       padding: 32px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .subtitle {
-      color: var(--text-muted);
-      margin-top: -8px;
-      margin-bottom: 24px;
-      font-size: 15px;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 8px 24px rgba(10, 25, 47, 0.08);
     }
 
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
     label {
       display: block;
       font-weight: 600;
+      color: var(--navy);
       margin-bottom: 6px;
-      font-size: 14px;
+      font-size: 0.9rem;
     }
 
     input, select {
       width: 100%;
-      padding: 12px;
+      padding: 12px 14px;
       border: 1px solid var(--border);
-      border-radius: 6px;
-      box-sizing: border-box;
-      font-size: 15px;
-      background-color: #fff;
+      border-radius: 8px;
+      font-size: 1rem;
+      background-color: #FAFAFA;
+      transition: border-color 0.2s;
     }
 
     input:focus, select:focus {
       outline: none;
-      border-color: var(--primary);
+      border-color: var(--gold);
+      background-color: #FFF;
     }
 
-    .form-row {
-      display: flex;
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
 
-    .form-row .form-group {
-      flex: 1;
+    @media (max-width: 600px) {
+      .grid-2 { grid-template-columns: 1fr; }
     }
 
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--gold);
+      color: var(--navy);
+      border: none;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
       margin-top: 10px;
     }
 
-    .checkbox-group input {
-      width: auto;
+    .btn-submit:hover {
+      background-color: var(--gold-hover);
     }
 
-    button[type="submit"] {
-      width: 100%;
-      padding: 14px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 12px;
-      transition: background 0.2s;
-    }
-
-    button[type="submit"]:hover {
-      background: var(--primary-hover);
-    }
-
-    .whatsapp-badge {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 14px;
-      color: var(--text-muted);
+    .btn-submit:active {
+      transform: scale(0.99);
     }
   </style>
 </head>
 <body>
 
-  <div class="header-nav">
+  <header>
     <h1>IMUKA</h1>
-    <a href="status.html" class="track-link">Track Booking</a>
-  </div>
+    <p>Seamless Relocation & Logistics Services in Kigali</p>
+    <div class="nav-links">
+      <a href="status.html">Track Existing Booking ➔</a>
+    </div>
+  </header>
 
-  <div class="container">
-    <h2>Seamless Relocation in Kigali</h2>
-    <p class="subtitle">Submit your move details and get your confirmed quote in under two minutes.</p>
-
-    <form id="bookingForm">
-      <div class="form-row">
+  <div class="form-container">
+    <form id="bookingForm" onsubmit="submitBooking(event)">
+      
+      <div class="grid-2">
         <div class="form-group">
           <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" placeholder="e.g. John Doe" required>
+          <input type="text" id="fullName" required placeholder="John Doe">
         </div>
         <div class="form-group">
           <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" placeholder="0788000000" required>
+          <input type="tel" id="phone" required placeholder="078XXXXXXX">
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="grid-2">
         <div class="form-group">
           <label for="pickup">Pickup Neighborhood</label>
-          <input type="text" id="pickup" placeholder="e.g. Gikondo" required>
+          <input type="text" id="pickup" required placeholder="e.g. Gikondo">
         </div>
         <div class="form-group">
           <label for="destination">Destination Neighborhood</label>
-          <input type="text" id="destination" placeholder="e.g. Kimironko" required>
+          <input type="text" id="destination" required placeholder="e.g. Kimihurura">
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="grid-2">
         <div class="form-group">
           <label for="moveType">Type of Move</label>
           <select id="moveType" required>
             <option value="Residential (House/Apartment)">Residential (House/Apartment)</option>
-            <option value="Office / Commercial">Office / Commercial</option>
-            <option value="Single Item Transport">Single Item Transport</option>
+            <option value="Commercial/Office">Commercial / Office</option>
+            <option value="Single Items / Heavy Moving">Single Items / Heavy Moving</option>
           </select>
         </div>
         <div class="form-group">
           <label for="truckSize">Truck Size Required</label>
           <select id="truckSize" required>
+            <option value="Small Pickup Truck">Small Pickup Truck</option>
             <option value="Medium Moving Van">Medium Moving Van</option>
-            <option value="Large 3.5T Truck">Large 3.5T Truck</option>
-            <option value="Extra Large Container Truck">Extra Large Container Truck</option>
+            <option value="Large Canter Truck">Large Canter Truck</option>
           </select>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="moveDate">Move Date</label>
+        <label for="moveDate">Preferred Move Date</label>
         <input type="date" id="moveDate" required>
       </div>
 
-      <div class="checkbox-group">
-        <input type="checkbox" id="stairs">
-        <label for="stairs" style="font-weight: normal;">Stairs required at pickup or destination?</label>
-      </div>
-
-      <button type="submit" id="submitBtn">Submit Booking Request</button>
+      <button type="submit" class="btn-submit" id="submitBtn">Submit Relocation Request</button>
     </form>
-
-    <div class="whatsapp-badge">
-      WhatsApp Support: <strong>0791 639 756</strong>
-    </div>
   </div>
 
 <script>
-  // Initialize Supabase Client
   const SUPABASE_URL = "https://kjclnylnmfdgnadnmbfz.supabase.co";
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w'; // Replace with your actual anon key string
+  // Substitute with your actual Supabase Anon Public Key
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w'; 
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const form = document.getElementById('bookingForm');
-  const submitBtn = document.getElementById('submitBtn');
+  async function submitBooking(event) {
+    event.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.innerText = "Submitting...";
+    btn.disabled = true;
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    submitBtn.disabled = true;
-    submitBtn.innerText = "Submitting...";
-
-    // Collect form inputs
-    const fullName = document.getElementById('fullName').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const pickup = document.getElementById('pickup').value.trim();
-    const destination = document.getElementById('destination').value.trim();
-    const moveType = document.getElementById('moveType').value;
-    const truckSize = document.getElementById('truckSize').value;
-    const moveDate = document.getElementById('moveDate').value;
-    const stairs = document.getElementById('stairs').checked;
+    const bookingData = {
+      full_name: document.getElementById('fullName').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      pickup: document.getElementById('pickup').value.trim(),
+      destination: document.getElementById('destination').value.trim(),
+      move_type: document.getElementById('moveType').value,
+      truck_size: document.getElementById('truckSize').value,
+      move_date: document.getElementById('moveDate').value,
+      status: 'Pending'
+    };
 
     try {
-      // 1. Insert row into Supabase and .select() the resulting object
       const { data, error } = await supabase
         .from('bookings')
-        .insert([{
-          name: fullName,
-          phone: phone,
-          pickup: pickup,
-          destination: destination,
-          move_type: moveType,
-          truck_size: truckSize,
-          move_date: moveDate,
-          stairs: stairs,
-          status: 'Pending'
-        }])
-        .select(); // <--- CRITICAL: Returns the newly generated ID from Supabase!
+        .insert([bookingData])
+        .select();
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
-      // 2. Extract the newly assigned Booking ID safely from array
       const newBooking = data[0];
-      const bookingId = newBooking ? newBooking.id : 'N/A';
-      const refCode = `IMK-${bookingId}`;
-
-      // 3. Construct WhatsApp message with valid Reference Code
-      const whatsappMsg = `Hello IMUKA! I just submitted a move request on the website.\n\n*Reference:* ${refCode}\n*Name:* ${fullName}\n*From:* ${pickup}\n*To:* ${destination}\n*Date:* ${moveDate}`;
-
-      const whatsappUrl = `https://wa.me/250791639756?text=${encodeURIComponent(whatsappMsg)}`;
-
-      // 4. Alert user & open WhatsApp
-      alert(`Booking submitted successfully! Your Reference ID is ${refCode}.`);
-      window.open(whatsappUrl, '_blank');
-
-      // 5. Reset Form
-      form.reset();
-
+      alert(`🎉 Booking Request Received!\nYour Booking ID is #${newBooking.id}.\nYou can use your Phone Number or Booking ID to track your status on the Track Booking page.`);
+      document.getElementById('bookingForm').reset();
     } catch (err) {
-      console.error("Booking Error:", err);
-      alert("Failed to submit booking request. Please check your connection or contact support directly via WhatsApp.");
+      console.error("Supabase Insertion Error:", err);
+      alert("Error submitting request: " + (err.message || "Failed to reach database. Check your key and connection."));
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerText = "Submit Booking Request";
+      btn.innerText = "Submit Relocation Request";
+      btn.disabled = false;
     }
-  });
+  }
 </script>
 
 </body>
