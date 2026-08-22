@@ -117,22 +117,22 @@
 
 <script>
   const SUPABASE_URL = "https://kjclnylnmfdgnadnmbfz.supabase.co";
-  // Substitute with your actual Supabase Anon Public Key
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   async function fetchBookings() {
     const tbody = document.getElementById('bookingTable');
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Loading bookings...</td></tr>';
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('bookings')
       .select('*')
       .order('id', { ascending: false });
 
     if (error) {
       console.error(error);
-      tbody.innerHTML = '<tr><td colspan="7" style="color:red; text-align:center;">Error loading data.</td></tr>';
+      tbody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">Error loading data: ${error.message}</td></tr>`;
       return;
     }
 
@@ -164,8 +164,7 @@
   }
 
   async function updateStatus(id, newStatus, phone, name) {
-    // 1. Update Supabase
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from('bookings')
       .update({ status: newStatus })
       .eq('id', id);
@@ -175,7 +174,6 @@
       return;
     }
 
-    // 2. Trigger Serverless Vercel API Notification
     try {
       await fetch('/api/notify', {
         method: 'POST',
@@ -186,10 +184,9 @@
       console.warn("API notify route warning:", err);
     }
 
-    fetchBookings(); // Refresh UI
+    fetchBookings();
   }
 
-  // Initial Fetch
   fetchBookings();
 </script>
 
