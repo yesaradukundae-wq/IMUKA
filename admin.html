@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMUKA Admin — Operations Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body style="padding-bottom: 20px;">
+
+  <header class="navbar">
+    <span class="brand-title">IMUKA Operations</span>
+    <button class="btn-submit" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.75rem;" onclick="loadBookings()">Refresh</button>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <h2 style="font-family: var(--font-heading); color: var(--primary); margin-bottom: 0.5rem;">Active Bookings</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Review and manage incoming relocation requests.</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Ref</th>
+              <th>Customer</th>
+              <th>Route</th>
+              <th>Date</th>
+              <th>Estimate</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody">
+            <tr><td colspan="7">Loading records...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://YOUR_SUPABASE_PROJECT_ID.supabase.co";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function loadBookings() {
+      const tbody = document.getElementById('adminTableBody');
+      tbody.innerHTML = '<tr><td colspan="7">Loading records...</td></tr>';
+
+      const { data, error } = await supabaseClient
+        .from('bookings')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        tbody.innerHTML = `<tr><td colspan="7" style="color:red;">Error loading records: ${error.message}</td></tr>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7">No bookings found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = data.map(b => `
+        <tr>
+          <td><strong>${b.booking_ref}</strong></td>
+          <td>b.customername<br><small>{b.customer_phone}</small></td>
+          <td>${b.pickup_location} → ${b.dropoff_location}</td>
+          <td>${b.pickup_date}</td>
+          <td>${Number(b.estimated_price_min).toLocaleString()} - ${Number(b.estimated_price_max).toLocaleString()} RWF</td>
+          <td><span class="badge b.status">{b.status}</span></td>
+          <td>
+            <button onclick="updateStatus('${b.id}', 'confirmed')" style="cursor:pointer; padding:2px 6px;">Approve</button>
+            <button onclick="updateStatus('${b.id}', 'cancelled')" style="cursor:pointer; padding:2px 6px;">Cancel</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function updateStatus(id, newStatus) {
+      const { error } = await supabaseClient
+        .from('bookings')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (!error) loadBookings();
+    }
+
+    document.addEventListener('DOMContentLoaded', loadBookings);
+  </script>
+</body>
+</html>

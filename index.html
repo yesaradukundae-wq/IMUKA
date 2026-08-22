@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMUKA — Moving made easy.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="navbar">
+    <div>
+      <span class="brand-title">IMUKA</span>
+      <span class="brand-tagline">Moving made easy.</span>
+    </div>
+    <div class="lang-selector">
+      <button class="lang-btn active" onclick="switchLanguage('en', event)">EN</button>
+      <button class="lang-btn" onclick="switchLanguage('rw', event)">RW</button>
+      <button class="lang-btn" onclick="switchLanguage('fr', event)">FR</button>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <!-- Hero Banner -->
+    <section class="card hero">
+      <h2 data-i18n="heroTitle">Seamless Relocation in Kigali</h2>
+      <p data-i18n="heroDesc">Submit your move details and get your confirmed quote in under two minutes.</p>
+    </section>
+
+    <!-- Booking Form -->
+    <section class="card">
+      <form id="imukaBookingForm">
+        <div class="form-grid">
+          
+          <div class="form-group">
+            <label data-i18n="labelName">Full Name</label>
+            <input type="text" id="custName" required placeholder="John Doe">
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="labelPhone">Phone Number</label>
+            <input type="tel" id="custPhone" required placeholder="0788 000 000">
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="labelPickup">Pickup Neighborhood</label>
+            <input type="text" id="pickupLoc" required placeholder="e.g. Gikondo">
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="labelDropoff">Destination Neighborhood</label>
+            <input type="text" id="dropoffLoc" required placeholder="e.g. Kimihurura">
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="labelMoveType">Type of Move</label>
+            <select id="moveType">
+              <option value="residential">Residential (House/Apartment)</option>
+              <option value="office">Commercial / Office</option>
+              <option value="furniture">Single Large Item / Furniture</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="labelTruck">Truck Size Required</label>
+            <select id="truckSize">
+              <option value="pickup">Small Pickup Truck</option>
+              <option value="medium" selected>Medium Moving Van</option>
+              <option value="large">Large Box Truck</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="labelDate">Move Date</label>
+            <input type="date" id="moveDate" required>
+          </div>
+
+          <div class="form-group checkbox-group full-width">
+            <input type="checkbox" id="hasStairs">
+            <label for="hasStairs" data-i18n="labelStairs">Stairs required at pickup or destination?</label>
+          </div>
+
+        </div>
+
+        <!-- Fixed Starting Price Banner -->
+        <div class="estimate-box">
+          <div class="estimate-title" data-i18n="estTitle">Rates & Pricing</div>
+          <div class="estimate-amount" id="estimateDisplay" data-i18n="estAmount">Starting from 80,000 RWF</div>
+        </div>
+
+        <button type="submit" class="btn-submit" data-i18n="btnSubmit">Confirm Booking Request</button>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- Sticky Mobile WhatsApp Bar -->
+  <div class="mobile-bar">
+    <a href="https://wa.me/250791639756" class="btn-whatsapp" target="_blank">
+      💬 WhatsApp: 0791 639 756
+    </a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>
