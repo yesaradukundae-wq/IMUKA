@@ -3,216 +3,195 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IMUKA Admin Dashboard</title>
-  <!-- Supabase CDN -->
+  <title>IMUKA - Admin Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    :root {
+      --navy: #0A192F;
+      --gold: #D4AF37;
+      --gold-hover: #C5A028;
+      --bg-cream: #FAF9F6;
+      --card-bg: #FFFFFF;
+      --text: #1E293B;
+      --border: #E2E8F0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f4f6f8;
-      margin: 0;
-      padding: 20px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-cream);
+      color: var(--text);
+      padding: 24px;
     }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: #ffffff;
-      padding: 25px;
+
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 20px 24px;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #f0f0f0;
-      padding-bottom: 15px;
+      margin-bottom: 24px;
+      border-bottom: 4px solid var(--gold);
     }
-    h1 {
-      margin: 0;
-      color: #1a202c;
-      font-size: 24px;
+
+    header h1 {
+      color: var(--gold);
+      font-size: 1.5rem;
     }
-    .btn-refresh {
-      background: #3182ce;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .btn-refresh:hover { background: #2b6cb0; }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-    th, td {
-      text-align: left;
-      padding: 12px 14px;
-      border-bottom: 1px solid #e2e8f0;
-      font-size: 14px;
-    }
-    th {
-      background-color: #f7fafc;
-      color: #4a5568;
-      font-weight: 600;
-      text-transform: uppercase;
-      font-size: 12px;
-      letter-spacing: 0.5px;
-    }
-    tr:hover { background-color: #f8fafc; }
-    
-    /* Status Badges */
-    .status-badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-    .status-pending { background: #fefcbf; color: #744210; }
-    .status-approved { background: #c6f6d5; color: #22543d; }
-    .status-cancelled { background: #fed7d7; color: #742a2a; }
 
-    /* Action Buttons */
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #F1F5F9;
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-Pending { background: #FEF3C7; color: #92400E; }
+    .badge-Approved { background: #D1FAE5; color: #065F46; }
+    .badge-Cancelled { background: #FEE2E2; color: #991B1B; }
+
     .btn-action {
+      padding: 6px 12px;
       border: none;
-      padding: 5px 10px;
       border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
+      font-size: 0.8rem;
       font-weight: 600;
+      cursor: pointer;
       margin-right: 4px;
     }
-    .btn-approve { background: #48bb78; color: white; }
-    .btn-approve:hover { background: #38a169; }
-    .btn-cancel { background: #e53e3e; color: white; }
-    .btn-cancel:hover { background: #c53030; }
+
+    .btn-approve { background: #10B981; color: white; }
+    .btn-cancel { background: #EF4444; color: white; }
+    .btn-whatsapp { background: #25D366; color: white; text-decoration: none; display: inline-block; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="header">
-      <h1>🚚 IMUKA Booking Dashboard</h1>
-      <button onclick="fetchBookings()" class="btn-refresh">🔄 Refresh</button>
-    </div>
+  <header>
+    <h1>IMUKA Admin Dashboard</h1>
+    <button onclick="fetchBookings()" style="background:var(--gold); color:var(--navy); border:none; padding:8px 16px; font-weight:bold; border-radius:4px; cursor:pointer;">Refresh</button>
+  </header>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Ref</th>
-          <th>Customer</th>
-          <th>Route</th>
-          <th>Move Date</th>
-          <th>Booked On</th>
-          <th>Estimate</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="bookingsTableBody">
-        <tr>
-          <td colspan="8" style="text-align: center; padding: 20px;">Loading bookings...</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Phone</th>
+        <th>Route</th>
+        <th>Move Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="bookingTable">
+      <tr><td colspan="7" style="text-align:center;">Loading bookings...</td></tr>
+    </tbody>
+  </table>
 
-  <script>
-    // Supabase Credentials
-    const SUPABASE_URL = 'https://kjclnylnmfdgnadnmbfz.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w';
+<script>
+  const SUPABASE_URL = "https://kjclnylnmfdgnadnmbfz.supabase.co";
+  // Substitute with your actual Supabase Anon Public Key
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w';
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  async function fetchBookings() {
+    const tbody = document.getElementById('bookingTable');
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Loading bookings...</td></tr>';
 
-    // Fetch and display all bookings
-    async function fetchBookings() {
-      const tableBody = document.getElementById('bookingsTableBody');
-      if (!tableBody) return;
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .order('id', { ascending: false });
 
-      tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 20px;">Loading bookings...</td></tr>`;
-
-      try {
-        const { data: bookings, error } = await supabaseClient
-          .from('bookings')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        if (!bookings || bookings.length === 0) {
-          tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 20px;">No bookings found.</td></tr>`;
-          return;
-        }
-
-        tableBody.innerHTML = bookings.map(b => {
-          // Format the booking submission timestamp
-          const bookedOn = b.created_at 
-            ? new Date(b.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-            : 'N/A';
-
-          // Format price numbers nicely with commas
-          const priceMin = b.estimated_price_min ? Number(b.estimated_price_min).toLocaleString() : '0';
-          const priceMax = b.estimated_price_max ? Number(b.estimated_price_max).toLocaleString() : '0';
-
-          // Status color badge class
-          const currentStatus = b.status || 'Pending';
-          let badgeClass = 'status-pending';
-          if (currentStatus === 'Approved') badgeClass = 'status-approved';
-          if (currentStatus === 'Cancelled') badgeClass = 'status-cancelled';
-
-          return `
-            <tr>
-              <td><strong>IMK-${b.id}</strong></td>
-              <td>
-                <strong>${b.customer_name || 'N/A'}</strong><br>
-                <small style="color: #666;">📞 ${b.customer_phone || 'No phone'}</small>
-              </td>
-              <td>${b.pickup_location || 'N/A'} &rarr; ${b.dropoff_location || 'N/A'}</td>
-              <td>${b.pickup_date || 'N/A'}</td>
-              <td><small>${bookedOn}</small></td>
-              <td><strong>${priceMin} - ${priceMax} RWF</strong></td>
-              <td>
-                <span class="status-badge ${badgeClass}">${currentStatus}</span>
-              </td>
-              <td>
-                <button onclick="updateBookingStatus(${b.id}, 'Approved')" class="btn-action btn-approve">Approve</button>
-                <button onclick="updateBookingStatus(${b.id}, 'Cancelled')" class="btn-action btn-cancel">Cancel</button>
-              </td>
-            </tr>
-          `;
-        }).join('');
-
-      } catch (err) {
-        console.error('Error fetching bookings:', err);
-        tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red; padding: 20px;">Failed to load bookings: ${err.message}</td></tr>`;
-      }
+    if (error) {
+      console.error(error);
+      tbody.innerHTML = '<tr><td colspan="7" style="color:red; text-align:center;">Error loading data.</td></tr>';
+      return;
     }
 
-    // Update booking status (Approve / Cancel)
-    async function updateBookingStatus(bookingId, newStatus) {
-      try {
-        const { error } = await supabaseClient
-          .from('bookings')
-          .update({ status: newStatus })
-          .eq('id', bookingId);
-
-        if (error) throw error;
-
-        // Refresh table display immediately
-        fetchBookings();
-      } catch (err) {
-        console.error('Error updating status:', err);
-        alert(`Could not update status: ${err.message}`);
-      }
+    if (!data || data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No bookings found.</td></tr>';
+      return;
     }
 
-    // Load bookings when page loads
-    document.addEventListener('DOMContentLoaded', fetchBookings);
-  </script>
+    tbody.innerHTML = data.map(b => {
+      const waMessage = encodeURIComponent(`Hi ${b.full_name}, regarding your IMUKA relocation request #${b.id}...`);
+      const cleanPhone = (b.phone || '').replace(/[^0-9]/g, '');
+
+      return `
+        <tr>
+          <td><strong>#${b.id}</strong></td>
+          <td>${b.full_name || 'N/A'}</td>
+          <td>${b.phone || 'N/A'}</td>
+          <td>${b.pickup || ''} ➔ ${b.destination || ''}</td>
+          <td>${b.move_date || 'N/A'}</td>
+          <td><span class="badge badge-${b.status}">${b.status}</span></td>
+          <td>
+            ${b.status !== 'Approved' ? `<button class="btn-action btn-approve" onclick="updateStatus(${b.id}, 'Approved', '${b.phone}', '${b.full_name}')">Approve</button>` : ''}
+            ${b.status !== 'Cancelled' ? `<button class="btn-action btn-cancel" onclick="updateStatus(${b.id}, 'Cancelled', '${b.phone}', '${b.full_name}')">Cancel</button>` : ''}
+            <a href="https://wa.me/${cleanPhone}?text=${waMessage}" target="_blank" class="btn-whatsapp">WhatsApp</a>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  async function updateStatus(id, newStatus, phone, name) {
+    // 1. Update Supabase
+    const { error } = await supabase
+      .from('bookings')
+      .update({ status: newStatus })
+      .eq('id', id);
+
+    if (error) {
+      alert("Failed to update status: " + error.message);
+      return;
+    }
+
+    // 2. Trigger Serverless Vercel API Notification
+    try {
+      await fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId: id, status: newStatus, phone, name })
+      });
+    } catch (err) {
+      console.warn("API notify route warning:", err);
+    }
+
+    fetchBookings(); // Refresh UI
+  }
+
+  // Initial Fetch
+  fetchBookings();
+</script>
+
 </body>
 </html>
