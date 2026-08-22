@@ -201,10 +201,15 @@
   </div>
 
 <script>
+  // Set minimum selectable date to TODAY in Kigali
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('moveDate').setAttribute('min', today);
+
   const SUPABASE_URL = "https://kjclnylnmfdgnadnmbfz.supabase.co";
-  // Substitute with your actual Supabase Anon Public Key
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w'; 
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w';
+  
+  // Using supabaseClient prevents syntax conflict with global library
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   async function submitBooking(event) {
     event.preventDefault();
@@ -224,7 +229,7 @@
     };
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('bookings')
         .insert([bookingData])
         .select();
@@ -232,11 +237,12 @@
       if (error) throw error;
 
       const newBooking = data[0];
-      alert(`🎉 Booking Request Received!\nYour Booking ID is #${newBooking.id}.\nYou can use your Phone Number or Booking ID to track your status on the Track Booking page.`);
+      alert(`🎉 Booking Request Received!\nYour Booking ID is #${newBooking.id}.\nYou can track it on the Track Booking page using your Phone Number or Booking ID.`);
       document.getElementById('bookingForm').reset();
+      document.getElementById('moveDate').setAttribute('min', today); // Re-apply min date after reset
     } catch (err) {
-      console.error("Supabase Insertion Error:", err);
-      alert("Error submitting request: " + (err.message || "Failed to reach database. Check your key and connection."));
+      console.error("Supabase Error:", err);
+      alert("Error submitting request: " + (err.message || "Failed to reach database. Verify table permissions in Supabase."));
     } finally {
       btn.innerText = "Submit Relocation Request";
       btn.disabled = false;
