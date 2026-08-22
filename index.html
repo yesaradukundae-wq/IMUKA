@@ -3,108 +3,287 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IMUKA — Moving made easy.</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <title>IMUKA - Seamless Relocation in Kigali</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary: #0066ff;
+      --primary-hover: #0052cc;
+      --bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --text: #1a1a1a;
+      --text-muted: #666666;
+      --border: #e5e7eb;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+    }
+
+    .header-nav {
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-nav h1 {
+      margin: 0;
+      font-size: 24px;
+      color: var(--primary);
+    }
+
+    .track-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      border: 1px solid var(--primary);
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .track-link:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      margin-top: -8px;
+      margin-bottom: 24px;
+      font-size: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 15px;
+      background-color: #fff;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .checkbox-group input {
+      width: auto;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: background 0.2s;
+    }
+
+    button[type="submit"]:hover {
+      background: var(--primary-hover);
+    }
+
+    .whatsapp-badge {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="navbar">
-    <div>
-      <span class="brand-title">IMUKA</span>
-      <span class="brand-tagline">Moving made easy.</span>
-    </div>
-    <div class="lang-selector">
-      <button class="lang-btn active" onclick="switchLanguage('en', event)">EN</button>
-      <button class="lang-btn" onclick="switchLanguage('rw', event)">RW</button>
-      <button class="lang-btn" onclick="switchLanguage('fr', event)">FR</button>
-    </div>
-  </header>
-
-  <main class="container">
-    
-    <!-- Hero Banner -->
-    <section class="card hero">
-      <h2 data-i18n="heroTitle">Seamless Relocation in Kigali</h2>
-      <p data-i18n="heroDesc">Submit your move details and get your confirmed quote in under two minutes.</p>
-    </section>
-
-    <!-- Booking Form -->
-    <section class="card">
-      <form id="imukaBookingForm">
-        <div class="form-grid">
-          
-          <div class="form-group">
-            <label data-i18n="labelName">Full Name</label>
-            <input type="text" id="custName" required placeholder="John Doe">
-          </div>
-
-          <div class="form-group">
-            <label data-i18n="labelPhone">Phone Number</label>
-            <input type="tel" id="custPhone" required placeholder="0788 000 000">
-          </div>
-
-          <div class="form-group">
-            <label data-i18n="labelPickup">Pickup Neighborhood</label>
-            <input type="text" id="pickupLoc" required placeholder="e.g. Gikondo">
-          </div>
-
-          <div class="form-group">
-            <label data-i18n="labelDropoff">Destination Neighborhood</label>
-            <input type="text" id="dropoffLoc" required placeholder="e.g. Kimihurura">
-          </div>
-
-          <div class="form-group">
-            <label data-i18n="labelMoveType">Type of Move</label>
-            <select id="moveType">
-              <option value="residential">Residential (House/Apartment)</option>
-              <option value="office">Commercial / Office</option>
-              <option value="furniture">Single Large Item / Furniture</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label data-i18n="labelTruck">Truck Size Required</label>
-            <select id="truckSize">
-              <option value="pickup">Small Pickup Truck</option>
-              <option value="medium" selected>Medium Moving Van</option>
-              <option value="large">Large Box Truck</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label data-i18n="labelDate">Move Date</label>
-            <input type="date" id="moveDate" required>
-          </div>
-
-          <div class="form-group checkbox-group full-width">
-            <input type="checkbox" id="hasStairs">
-            <label for="hasStairs" data-i18n="labelStairs">Stairs required at pickup or destination?</label>
-          </div>
-
-        </div>
-
-        <!-- Fixed Starting Price Banner -->
-        <div class="estimate-box">
-          <div class="estimate-title" data-i18n="estTitle">Rates & Pricing</div>
-          <div class="estimate-amount" id="estimateDisplay" data-i18n="estAmount">Starting from 80,000 RWF</div>
-        </div>
-
-        <button type="submit" class="btn-submit" data-i18n="btnSubmit">Confirm Booking Request</button>
-      </form>
-    </section>
-
-  </main>
-
-  <!-- Sticky Mobile WhatsApp Bar -->
-  <div class="mobile-bar">
-    <a href="https://wa.me/250791639756" class="btn-whatsapp" target="_blank">
-      💬 WhatsApp: 0791 639 756
-    </a>
+  <div class="header-nav">
+    <h1>IMUKA</h1>
+    <a href="status.html" class="track-link">Track Booking</a>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="script.js"></script>
+  <div class="container">
+    <h2>Seamless Relocation in Kigali</h2>
+    <p class="subtitle">Submit your move details and get your confirmed quote in under two minutes.</p>
+
+    <form id="bookingForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" placeholder="e.g. John Doe" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="0788000000" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pickup">Pickup Neighborhood</label>
+          <input type="text" id="pickup" placeholder="e.g. Gikondo" required>
+        </div>
+        <div class="form-group">
+          <label for="destination">Destination Neighborhood</label>
+          <input type="text" id="destination" placeholder="e.g. Kimironko" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="moveType">Type of Move</label>
+          <select id="moveType" required>
+            <option value="Residential (House/Apartment)">Residential (House/Apartment)</option>
+            <option value="Office / Commercial">Office / Commercial</option>
+            <option value="Single Item Transport">Single Item Transport</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="truckSize">Truck Size Required</label>
+          <select id="truckSize" required>
+            <option value="Medium Moving Van">Medium Moving Van</option>
+            <option value="Large 3.5T Truck">Large 3.5T Truck</option>
+            <option value="Extra Large Container Truck">Extra Large Container Truck</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="moveDate">Move Date</label>
+        <input type="date" id="moveDate" required>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="stairs">
+        <label for="stairs" style="font-weight: normal;">Stairs required at pickup or destination?</label>
+      </div>
+
+      <button type="submit" id="submitBtn">Submit Booking Request</button>
+    </form>
+
+    <div class="whatsapp-badge">
+      WhatsApp Support: <strong>0791 639 756</strong>
+    </div>
+  </div>
+
+<script>
+  // Initialize Supabase Client
+  const SUPABASE_URL = "https://kjclnylnmfdgnadnmbfz.supabase.co";
+  const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY"; // Replace with your actual anon key string
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const form = document.getElementById('bookingForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Submitting...";
+
+    // Collect form inputs
+    const fullName = document.getElementById('fullName').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const pickup = document.getElementById('pickup').value.trim();
+    const destination = document.getElementById('destination').value.trim();
+    const moveType = document.getElementById('moveType').value;
+    const truckSize = document.getElementById('truckSize').value;
+    const moveDate = document.getElementById('moveDate').value;
+    const stairs = document.getElementById('stairs').checked;
+
+    try {
+      // 1. Insert row into Supabase and .select() the resulting object
+      const { data, error } = await supabase
+        .from('bookings')
+        .insert([{
+          name: fullName,
+          phone: phone,
+          pickup: pickup,
+          destination: destination,
+          move_type: moveType,
+          truck_size: truckSize,
+          move_date: moveDate,
+          stairs: stairs,
+          status: 'Pending'
+        }])
+        .select(); // <--- CRITICAL: Returns the newly generated ID from Supabase!
+
+      if (error) {
+        throw error;
+      }
+
+      // 2. Extract the newly assigned Booking ID safely from array
+      const newBooking = data[0];
+      const bookingId = newBooking ? newBooking.id : 'N/A';
+      const refCode = `IMK-${bookingId}`;
+
+      // 3. Construct WhatsApp message with valid Reference Code
+      const whatsappMsg = `Hello IMUKA! I just submitted a move request on the website.\n\n*Reference:* ${refCode}\n*Name:* ${fullName}\n*From:* ${pickup}\n*To:* ${destination}\n*Date:* ${moveDate}`;
+
+      const whatsappUrl = `https://wa.me/250791639756?text=${encodeURIComponent(whatsappMsg)}`;
+
+      // 4. Alert user & open WhatsApp
+      alert(`Booking submitted successfully! Your Reference ID is ${refCode}.`);
+      window.open(whatsappUrl, '_blank');
+
+      // 5. Reset Form
+      form.reset();
+
+    } catch (err) {
+      console.error("Booking Error:", err);
+      alert("Failed to submit booking request. Please check your connection or contact support directly via WhatsApp.");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Submit Booking Request";
+    }
+  });
+</script>
+
 </body>
 </html>
