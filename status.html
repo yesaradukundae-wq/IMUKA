@@ -3,181 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IMUKA - Track & Manage Booking</title>
+  <title>IMUKA - Track Your Relocation</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --navy: #0A192F;
       --gold: #D4AF37;
       --gold-hover: #C5A028;
-      --bg-cream: #FAF9F6;
-      --card-bg: #FFFFFF;
-      --text: #1E293B;
-      --border: #E2E8F0;
+      --bg: #FAF9F6;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background-color: var(--bg-cream);
-      color: var(--text);
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 550px;
-      margin: 40px auto;
-      background: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(10, 25, 47, 0.08);
-      overflow: hidden;
-      border-top: 5px solid var(--gold);
-    }
-
-    .header {
-      background: var(--navy);
-      color: white;
-      padding: 24px;
-      text-align: center;
-    }
-
-    .header h2 {
-      color: var(--gold);
-      font-size: 1.6rem;
-    }
-
-    .content {
-      padding: 28px;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      color: var(--navy);
-      margin-bottom: 6px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 1rem;
-      margin-bottom: 16px;
-    }
-
-    .btn-search {
-      width: 100%;
-      padding: 12px;
-      background: var(--gold);
-      color: var(--navy);
-      font-weight: 700;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-
-    .btn-search:hover {
-      background: var(--gold-hover);
-    }
-
-    .card {
-      background: #FAFAFA;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--navy);
-      padding: 16px;
-      border-radius: 6px;
-      margin-top: 16px;
-    }
-
-    .card h3 {
-      color: var(--navy);
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
+    body { font-family: system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+    .container { max-width: 500px; margin: 40px auto; background: white; padding: 28px; border-radius: 12px; border-top: 5px solid var(--gold); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    h2 { color: var(--navy); margin-top: 0; }
+    input { width: 100%; padding: 12px; margin: 10px 0 16px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+    .btn-track { width: 100%; padding: 12px; background: var(--gold); color: var(--navy); border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .btn-track:hover { background: var(--gold-hover); }
+    .card { background: #fdfdfd; border: 1px solid #e2e8f0; border-left: 4px solid var(--navy); padding: 16px; border-radius: 6px; margin-top: 16px; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; }
     .badge-Pending { background: #FEF3C7; color: #92400E; }
     .badge-Approved { background: #D1FAE5; color: #065F46; }
     .badge-Cancelled { background: #FEE2E2; color: #991B1B; }
-
-    .btn-cancel {
-      background: #DC2626;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 12px;
-      width: 100%;
-    }
-
-    .btn-cancel:hover {
-      background: #B91C1C;
-    }
-
-    .back-link {
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-      color: var(--navy);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
+    .btn-cancel { background: #DC2626; color: white; margin-top: 12px; padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="header">
-    <h2>Track Your Booking</h2>
-    <p style="color: #CBD5E1; font-size: 0.85rem; margin-top: 4px;">Enter your details to view status or cancel request</p>
-  </div>
+  <h2>Track Your Relocation</h2>
+  <label for="search">Enter Phone Number or Booking ID:</label>
+  <input type="text" id="search" placeholder="e.g. 078XXXXXXX or 12">
+  <button class="btn-track" onclick="trackBooking()">Find Booking</button>
 
-  <div class="content">
-    <label for="search">Phone Number or Booking ID</label>
-    <input type="text" id="search" placeholder="e.g. 078XXXXXXX or 12">
-    <button class="btn-search" onclick="trackBooking()">Find Booking</button>
-
-    <div id="results"></div>
-
-    <a href="index.html" class="back-link">← Back to New Booking</a>
-  </div>
+  <div id="results"></div>
 </div>
 
 <script>
   const SUPABASE_URL = "https://kjclnylnmfdgnadnmbfz.supabase.co";
-  // Substitute with your actual Supabase Anon Public Key
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  
+  // Renamed client variable to supabaseClient to prevent shadowing errors
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   async function trackBooking() {
     const input = document.getElementById('search').value.trim();
     const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = "<p style='margin-top:16px; text-align:center;'>Searching...</p>";
+    resultsDiv.innerHTML = "<p style='color: var(--navy);'>Searching records...</p>";
 
     if (!input) {
-      resultsDiv.innerHTML = "<p style='color:red; margin-top:16px;'>Please enter a Phone Number or Booking ID.</p>";
+      resultsDiv.innerHTML = "<p style='color:red;'>Please enter a phone number or ID.</p>";
       return;
     }
 
-    let query = supabase.from('bookings').select('*');
-
-    // Check if user entered a numeric ID or phone string
+    let query = supabaseClient.from('bookings').select('*');
     if (!isNaN(input)) {
       query = query.or(`id.eq.${input},phone.ilike.%${input}%`);
     } else {
@@ -188,25 +65,21 @@
 
     if (error) {
       console.error(error);
-      resultsDiv.innerHTML = "<p style='color:red; margin-top:16px;'>Error fetching booking details.</p>";
+      resultsDiv.innerHTML = "<p style='color:red;'>Error querying bookings. Please check your connection or key.</p>";
       return;
     }
 
     if (!data || data.length === 0) {
-      resultsDiv.innerHTML = "<p style='margin-top:16px; text-align:center;'>No bookings found matching that search.</p>";
+      resultsDiv.innerHTML = "<p>No bookings found matching that search.</p>";
       return;
     }
 
     resultsDiv.innerHTML = data.map(b => `
       <div class="card">
-        <h3>
-          Booking #${b.id}
-          <span class="badge badge-${b.status}">${b.status}</span>
-        </h3>
+        <h3 style="margin:0 0 8px 0; color:var(--navy);">Booking #${b.id}</h3>
         <p><strong>Name:</strong> ${b.full_name || 'N/A'}</p>
         <p><strong>Route:</strong> ${b.pickup || 'N/A'} ➔ ${b.destination || 'N/A'}</p>
-        <p><strong>Date:</strong> ${b.move_date || 'N/A'}</p>
-        <p><strong>Truck:</strong> ${b.truck_size || 'N/A'}</p>
+        <p><strong>Status:</strong> <span class="badge badge-${b.status}">${b.status}</span></p>
         
         ${b.status === 'Pending' ? `
           <button class="btn-cancel" onclick="cancelBooking(${b.id})">Cancel This Booking</button>
@@ -218,7 +91,7 @@
   async function cancelBooking(id) {
     if (!confirm(`Are you sure you want to cancel Booking #${id}?`)) return;
 
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from('bookings')
       .update({ status: 'Cancelled' })
       .eq('id', id);
@@ -227,7 +100,7 @@
       alert("Error cancelling booking: " + error.message);
     } else {
       alert("Booking cancelled successfully.");
-      trackBooking(); // Refresh view
+      trackBooking();
     }
   }
 </script>
