@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMUKA - Track Your Booking</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f4f6f8; margin: 0; padding: 20px; }
+    .container { max-width: 500px; margin: 40px auto; background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    h2 { margin-top: 0; color: #1a1a1a; }
+    label { font-size: 14px; font-weight: 600; color: #444; }
+    input { width: 100%; padding: 12px; margin: 8px 0 16px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
+    button { width: 100%; padding: 12px; background: #0066ff; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px; }
+    button:hover { background: #0052cc; }
+    .card { background: #f9fafb; border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .card h3 { margin-top: 0; margin-bottom: 8px; color: #111; }
+    .card p { margin: 6px 0; color: #555; font-size: 14px; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+    .badge-Pending { background: #fef3c7; color: #92400e; }
+    .badge-Approved { background: #d1fae5; color: #065f46; }
+    .badge-Cancelled { background: #fee2e2; color: #991b1b; }
+    .btn-cancel { background: #dc2626; margin-top: 12px; }
+    .btn-cancel:hover { background: #b91c1c; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Track Your Relocation</h2>
+  <label for="search">Enter Phone Number or Booking ID:</label>
+  <input type="text" id="search" placeholder="e.g. 078XXXXXXX or 12">
+  <button onclick="trackBooking()">Find Booking</button>
+
+  <div id="results"></div>
+</div>
+
+<script>
+  const SUPABASE_URL = "https://kjclnylnmfdgnadnmbfz.supabase.co";
+  // Paste your public anon key here:
+  const SUPABASE_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w'; 
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function trackBooking() {
+    const input = document.getElementById('search').value.trim();
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = "<p>Searching...</p>";
+
+    if (!input) {
+      resultsDiv.innerHTML = "<p style='color:red;'>Please enter a phone number or ID.</p>";
+      return;
+    }
+
+    // Query Supabase by Booking ID or Phone Number
+    const isNum = !isNaN(input);
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .or(isNum ? `id.eq.${input},phone.eq.${input}` : `phone.eq.${input}`)
+      .order('created_at', { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      resultsDiv.innerHTML = "<p style='color:#666; margin-top:16px;'>No bookings found matching that information.</p>";
+      return;
+    }
+
+    resultsDiv.innerHTML = data.map(b => `
+      <div class="card">
+        <h3>Booking #${b.id}</h3>
+        <p><strong>Route:</strong> ${b.pickup || 'N/A'} ➔ ${b.destination || 'N/A'}</p>
+        <p><strong>Status:</strong> <span class="badge badge-${b.status}">${b.status}</span></p>
+        
+        ${b.status === 'Pending' ? `
+          <button class="btn-cancel" onclick="cancelBooking(${b.id})">Cancel Booking</button>
+        ` : ''}
+      </div>
+    `).join('');
+  }
+
+  async function cancelBooking(bookingId) {
+    if (!confirm("Are you sure you want to cancel this booking?")) return;
+
+    const { error } = await supabase
+      .from('bookings')
+      .update({ status: 'Cancelled' })
+      .eq('id', bookingId);
+
+    if (error) {
+      alert("Error cancelling booking. Please contact support.");
+    } else {
+      alert("Booking successfully cancelled.");
+      trackBooking(); // Refresh view
+    }
+  }
+</script>
+
+</body>
+</html>
