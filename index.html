@@ -3,225 +3,444 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IMUKA - Seamless Relocation in Kigali</title>
+  <title>IMUKA - Premium Relocation Services in Kigali</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --navy: #0A192F;
+      --navy-light: #112240;
       --gold: #D4AF37;
       --gold-hover: #C5A028;
       --bg-cream: #FAF9F6;
       --card-bg: #FFFFFF;
-      --text: #1E293B;
+      --text-dark: #0F172A;
+      --text-muted: #64748B;
       --border: #E2E8F0;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg-cream); color: var(--text-dark); line-height: 1.6; }
+
+    /* NAVBAR */
+    nav {
+      background: var(--navy);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--gold);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .logo-container { display: flex; align-items: center; gap: 10px; }
+    .logo { color: var(--gold); font-size: 1.8rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
     
-    body { 
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
-      background-color: var(--bg-cream); 
-      color: var(--text); 
-      line-height: 1.6;
-      padding: 20px;
-    }
-
-    header {
-      text-align: center;
-      padding: 30px 10px;
-      background-color: var(--navy);
-      color: white;
-      border-radius: 12px 12px 0 0;
-      border-bottom: 4px solid var(--gold);
-    }
-
-    header h1 {
-      color: var(--gold);
-      font-size: 2.2rem;
-      letter-spacing: 1px;
-    }
-
-    header p {
-      color: #CBD5E1;
-      font-size: 0.95rem;
-      margin-top: 6px;
-    }
-
-    .nav-links {
-      margin-top: 15px;
-    }
-
-    .nav-links a {
-      color: var(--gold);
-      text-decoration: none;
+    .nav-link { 
+      color: var(--gold); 
+      text-decoration: none; 
+      font-size: 0.9rem; 
       font-weight: 600;
-      font-size: 0.9rem;
-      border: 1px solid var(--gold);
       padding: 6px 14px;
+      border: 1px solid var(--gold);
       border-radius: 20px;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
     }
+    .nav-link:hover { background: var(--gold); color: var(--navy); }
 
-    .nav-links a:hover {
-      background-color: var(--gold);
+    .lang-switcher { display: flex; gap: 4px; background: var(--navy-light); padding: 4px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.3); }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+    .lang-btn.active { background: var(--gold); color: var(--navy); }
+
+    /* HERO SECTION */
+    .hero {
+      background: linear-gradient(135deg, rgba(10, 25, 47, 0.92), rgba(17, 34, 64, 0.88)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 90px 20px 80px 20px;
+    }
+    .hero-badge { display: inline-block; background: rgba(212, 175, 55, 0.15); color: var(--gold); border: 1px solid var(--gold); padding: 6px 16px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 20px; text-transform: uppercase; }
+    .hero h1 { font-size: 2.8rem; color: #FFFFFF; font-weight: 800; max-width: 800px; margin: 0 auto 16px auto; line-height: 1.2; }
+    .hero h1 span { color: var(--gold); }
+    .hero p { max-width: 620px; margin: 0 auto 32px auto; color: #CBD5E1; font-size: 1.1rem; }
+    
+    .btn-hero {
+      background: var(--gold);
       color: var(--navy);
+      padding: 14px 36px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.05rem;
+      display: inline-block;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      transition: all 0.2s ease;
     }
+    .btn-hero:hover { background: var(--gold-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); }
 
-    .form-container {
-      max-width: 600px;
-      margin: 0 auto 40px auto;
+    /* FEATURES SECTION */
+    .features-container { max-width: 1000px; margin: -40px auto 60px auto; padding: 0 20px; position: relative; z-index: 10; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .feature-card {
       background: var(--card-bg);
-      padding: 32px;
-      border-radius: 0 0 12px 12px;
-      box-shadow: 0 8px 24px rgba(10, 25, 47, 0.08);
+      padding: 32px 24px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(10, 25, 47, 0.08);
+      border-top: 4px solid var(--gold);
+      transition: transform 0.2s ease;
     }
+    .feature-card:hover { transform: translateY(-4px); }
+    .feature-icon { width: 50px; height: 50px; background: rgba(10, 25, 47, 0.05); color: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 1.4rem; font-weight: 800; border: 1px solid rgba(212, 175, 55, 0.5); }
+    .feature-card h3 { color: var(--navy); margin-bottom: 10px; font-size: 1.2rem; }
+    .feature-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; }
 
-    .form-group {
-      margin-bottom: 20px;
+    /* BOOKING FORM SECTION */
+    .form-wrapper { max-width: 680px; margin: 0 auto 80px auto; padding: 0 20px; }
+    .form-card {
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 12px 32px rgba(10, 25, 47, 0.09);
+      border: 1px solid var(--border);
+      border-top: 6px solid var(--navy);
     }
+    .form-header { text-align: center; margin-bottom: 30px; }
+    .form-header h2 { color: var(--navy); font-size: 1.8rem; font-weight: 800; }
+    .form-header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; }
 
-    label {
-      display: block;
-      font-weight: 600;
-      color: var(--navy);
-      margin-bottom: 6px;
-      font-size: 0.9rem;
-    }
-
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-weight: 700; color: var(--navy); margin-bottom: 8px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    
     input, select {
       width: 100%;
-      padding: 12px 14px;
-      border: 1px solid var(--border);
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
       border-radius: 8px;
       font-size: 1rem;
       background-color: #FAFAFA;
-      transition: border-color 0.2s;
+      color: var(--text-dark);
+      transition: all 0.2s ease;
     }
+    input:focus, select:focus { outline: none; border-color: var(--gold); background-color: #FFFFFF; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); }
 
-    input:focus, select:focus {
-      outline: none;
-      border-color: var(--gold);
-      background-color: #FFF;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 600px) {
-      .grid-2 { grid-template-columns: 1fr; }
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } .hero h1 { font-size: 2.1rem; } .form-card { padding: 24px; } }
 
     .btn-submit {
       width: 100%;
-      padding: 14px;
+      padding: 16px;
       background-color: var(--gold);
       color: var(--navy);
       border: none;
       border-radius: 8px;
-      font-size: 1.05rem;
-      font-weight: 700;
+      font-size: 1.1rem;
+      font-weight: 800;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+      transition: all 0.2s ease;
       margin-top: 10px;
     }
+    .btn-submit:hover { background-color: var(--gold-hover); transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
 
-    .btn-submit:hover {
-      background-color: var(--gold-hover);
-    }
-
-    .btn-submit:active {
-      transform: scale(0.99);
-    }
+    footer { background: var(--navy); color: #94A3B8; text-align: center; padding: 24px; font-size: 0.85rem; border-top: 1px solid rgba(212, 175, 55, 0.2); }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>IMUKA</h1>
-    <p>Seamless Relocation & Logistics Services in Kigali</p>
-    <div class="nav-links">
-      <a href="status.html">Track Existing Booking ➔</a>
+  <!-- NAVBAR -->
+  <nav>
+    <div class="logo-container">
+      <div class="logo">IMUKA</div>
     </div>
-  </header>
-
-  <div class="form-container">
-    <form id="bookingForm" onsubmit="submitBooking(event)">
-      
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" required placeholder="John Doe">
-        </div>
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" required placeholder="078XXXXXXX">
-        </div>
+    <div class="nav-right">
+      <a href="status.html" class="nav-link" id="navTrack">Track Booking</a>
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">KN</button>
+        <button class="lang-btn" onclick="setLanguage('fr')">FR</button>
       </div>
+    </div>
+  </nav>
 
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="pickup">Pickup Neighborhood</label>
-          <input type="text" id="pickup" required placeholder="e.g. Gikondo">
-        </div>
-        <div class="form-group">
-          <label for="destination">Destination Neighborhood</label>
-          <input type="text" id="destination" required placeholder="e.g. Kimihurura">
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="moveType">Type of Move</label>
-          <select id="moveType" required>
-            <option value="Residential (House/Apartment)">Residential (House/Apartment)</option>
-            <option value="Commercial/Office">Commercial / Office</option>
-            <option value="Single Items / Heavy Moving">Single Items / Heavy Moving</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="truckSize">Truck Size Required</label>
-          <select id="truckSize" required>
-            <option value="Small Pickup Truck">Small Pickup Truck</option>
-            <option value="Medium Moving Van">Medium Moving Van</option>
-            <option value="Large Canter Truck">Large Canter Truck</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="moveDate">Preferred Move Date</label>
-        <input type="date" id="moveDate" required>
-      </div>
-
-      <button type="submit" class="btn-submit" id="submitBtn">Submit Relocation Request</button>
-    </form>
+  <!-- HERO SECTION -->
+  <div class="hero">
+    <span class="hero-badge" id="heroBadge">Kigali Relocation Partner</span>
+    <h1 id="heroTitle">Seamless & Reliable <span>Relocation Services</span></h1>
+    <p id="heroSub">Professional home, office, and apartment moving tailored across Kigali and all surrounding areas in Rwanda.</p>
+    <a href="#booking" class="btn-hero" id="heroBtn">Book Your Move Now</a>
   </div>
 
+  <!-- HOW IT WORKS FEATURES -->
+  <div class="features-container">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">1</div>
+        <h3 id="feat1Title">Select Locations</h3>
+        <p id="feat1Desc">Choose your pickup and destination neighborhoods across Kigali with your preferred schedule.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">2</div>
+        <h3 id="feat2Title">Choose Your Truck</h3>
+        <p id="feat2Desc">Pick the ideal vehicle size for single items, apartment furnishings, or full office moves.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">3</div>
+        <h3 id="feat3Title">Stress-Free Moving</h3>
+        <p id="feat3Desc">Our vetted relocation team handles the heavy lifting safely and arrives right on time.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOKING FORM SECTION -->
+  <div class="form-wrapper" id="booking">
+    <div class="form-card">
+      <div class="form-header">
+        <h2 id="formTitle">Request a Relocation Quote</h2>
+        <p id="formSub">Fill out your details below to instantly submit your request.</p>
+      </div>
+      
+      <form id="bookingForm" onsubmit="submitBooking(event)">
+        <div class="grid-2">
+          <div class="form-group">
+            <label id="lblFullName">Full Name</label>
+            <input type="text" id="fullName" required placeholder="e.g. Jean Mutanguha">
+          </div>
+          <div class="form-group">
+            <label id="lblPhone">Phone Number</label>
+            <input type="tel" id="phone" required placeholder="0788XXXXXX">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label id="lblPickup">Pickup Neighborhood</label>
+            <select id="pickup" required>
+              <option value="" disabled selected>Select Neighborhood</option>
+              <option value="Gikondo">Gikondo</option>
+              <option value="Kimironko">Kimironko</option>
+              <option value="Kacyiru">Kacyiru</option>
+              <option value="Nyarutarama">Nyarutarama</option>
+              <option value="Remera">Remera</option>
+              <option value="Kiyovu">Kiyovu</option>
+              <option value="Kicukiro">Kicukiro</option>
+              <option value="Kanombe">Kanombe</option>
+              <option value="Nyamirambo">Nyamirambo</option>
+              <option value="Gisozi">Gisozi</option>
+              <option value="Kimihurura">Kimihurura</option>
+              <option value="Rebero">Rebero</option>
+              <option value="Kibagabaga">Kibagabaga</option>
+              <option value="Other / Outside Kigali">Other / Outside Kigali</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label id="lblDestination">Destination Neighborhood</label>
+            <select id="destination" required>
+              <option value="" disabled selected>Select Destination</option>
+              <option value="Gikondo">Gikondo</option>
+              <option value="Kimironko">Kimironko</option>
+              <option value="Kacyiru">Kacyiru</option>
+              <option value="Nyarutarama">Nyarutarama</option>
+              <option value="Remera">Remera</option>
+              <option value="Kiyovu">Kiyovu</option>
+              <option value="Kicukiro">Kicukiro</option>
+              <option value="Kanombe">Kanombe</option>
+              <option value="Nyamirambo">Nyamirambo</option>
+              <option value="Gisozi">Gisozi</option>
+              <option value="Kimihurura">Kimihurura</option>
+              <option value="Rebero">Rebero</option>
+              <option value="Kibagabaga">Kibagabaga</option>
+              <option value="Other / Outside Kigali">Other / Outside Kigali</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label id="lblMoveType">Type of Move</label>
+            <select id="moveType" required>
+              <option value="Residential" id="optRes">Residential (House/Apartment)</option>
+              <option value="Commercial" id="optCom">Commercial / Office</option>
+              <option value="Single Items" id="optSgl">Single Heavy Items</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label id="lblTruck">Truck Size Required</label>
+            <select id="truckSize" required>
+              <option value="Small Pickup" id="optTrkSm">Small Pickup Truck</option>
+              <option value="Medium Van" id="optTrkMed">Medium Moving Van</option>
+              <option value="Large Canter" id="optTrkLg">Large Canter Truck</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label id="lblDate">Preferred Move Date</label>
+          <input type="date" id="moveDate" required>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">Submit Relocation Request</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 IMUKA Relocation Platform. All Rights Reserved.
+  </footer>
+
 <script>
-  // Set minimum selectable date to TODAY in Kigali
+  let currentLang = 'en';
+
+  const translations = {
+    en: {
+      navTrack: "Track Booking",
+      heroBadge: "Kigali Relocation Partner",
+      heroTitle: "Seamless & Reliable Relocation Services",
+      heroSub: "Professional home, office, and apartment moving tailored across Kigali and all surrounding areas in Rwanda.",
+      heroBtn: "Book Your Move Now",
+      feat1Title: "Select Locations",
+      feat1Desc: "Choose your pickup and destination neighborhoods across Kigali with your preferred schedule.",
+      feat2Title: "Choose Your Truck",
+      feat2Desc: "Pick the ideal vehicle size for single items, apartment furnishings, or full office moves.",
+      feat3Title: "Stress-Free Moving",
+      feat3Desc: "Our vetted relocation team handles the heavy lifting safely and arrives right on time.",
+      formTitle: "Request a Relocation Quote",
+      formSub: "Fill out your details below to instantly submit your request.",
+      lblFullName: "Full Name",
+      lblPhone: "Phone Number",
+      lblPickup: "Pickup Neighborhood",
+      lblDestination: "Destination Neighborhood",
+      lblMoveType: "Type of Move",
+      lblTruck: "Truck Size Required",
+      lblDate: "Preferred Move Date",
+      submitBtn: "Submit Relocation Request",
+      optRes: "Residential (House/Apartment)",
+      optCom: "Commercial / Office",
+      optSgl: "Single Heavy Items",
+      optTrkSm: "Small Pickup Truck",
+      optTrkMed: "Medium Moving Van",
+      optTrkLg: "Large Canter Truck",
+      alertSuccess: "🎉 Request Submitted!\nYour Booking ID is #",
+      alertSuccessSub: "\nYou can track its status using your phone number or booking ID."
+    },
+    kn: {
+      navTrack: "Gukurikirana Demande",
+      heroBadge: "Umushabitsi w'Ibyo Kwimuka i Kigali",
+      heroTitle: "Kwimuka Neza Mutagize ikibazo",
+      heroSub: "Serivisi zo kwimura ibintu mu ngo, mu mazu n'ibiro mu Mujyi wa Kigali n'inkengero zawe zose.",
+      heroBtn: "Saba Kwimurirwa Ibintu",
+      feat1Title: "Hitamo Aho Uturuka n'Aho Ujya",
+      feat1Desc: "Hitamo uduce tw'i Kigali uturukamo n'iyo ujya hamwe n'isaha wifuza.",
+      feat2Title: "Hitamo Imodoka Ukeneye",
+      feat2Desc: "Hitamo ingano y'imodoka ikwiranye n'ibintu byawe, ibyo mu nzu cyangwa mu biro.",
+      feat3Title: "Kwimuka Mu Mutekano",
+      feat3Desc: "Abakozi babishoboye bagufasha gutwara ibintu byawe neza mu mutekano no ku gihe.",
+      formTitle: "Uzuza Formu yo Kwimuka",
+      formSub: "Uzuza imyirondoro yawe kugirango woherereze demande yawe ubu.",
+      lblFullName: "Amazina Yombi",
+      lblPhone: "Nimero y'Telefoni",
+      lblPickup: "Aho Uturuka (Kigali)",
+      lblDestination: "Aho Ujya (Kigali)",
+      lblMoveType: "Ubwoko bwo Kwimuka",
+      lblTruck: "Ubwoko bw'Imodoka",
+      lblDate: "Itariki yo Kwimuka",
+      submitBtn: "Ohereza Demande yo Kwimuka",
+      optRes: "Inzu yo Guturamo / Apartema",
+      optCom: "Ibiro / Ubushabitsi",
+      optSgl: "Ibintu Bike Biremereye",
+      optTrkSm: "Imodoka Ntoya (Pickup)",
+      optTrkMed: "Imodoka Meshiyo (Van)",
+      optTrkLg: "Kanyon / Canter Nini",
+      alertSuccess: "🎉 Demande yoherejwe neza!\nNimero ya Booking yawe ni #",
+      alertSuccessSub: "\nUshobora gukurikirana uko bihagaze ukoresheje telefoni cyangwa iyi ID."
+    },
+    fr: {
+      navTrack: "Suivre la Réservation",
+      heroBadge: "Partenaire de Déménagement à Kigali",
+      heroTitle: "Services de Déménagement Simples & Fiables",
+      heroSub: "Déménagement professionnel pour maisons, bureaux et appartements dans tout Kigali et ses environs.",
+      heroBtn: "Réserver Votre Déménagement",
+      feat1Title: "Sélectionnez les Lieux",
+      feat1Desc: "Choisissez vos quartiers de départ et d'arrivée à Kigali selon votre horaire.",
+      feat2Title: "Choisissez Votre Camion",
+      feat2Desc: "Sélectionnez la taille de véhicule idéale pour vos meubles ou affaires de bureau.",
+      feat3Title: "Déménagement Sans Stress",
+      feat3Desc: "Notre équipe qualifiée s'occupe du transport de vos biens en toute sécurité et à l'heure.",
+      formTitle: "Demander un Devis de Déménagement",
+      formSub: "Remplissez vos informations ci-dessous pour soumettre votre demande.",
+      lblFullName: "Nom Complet",
+      lblPhone: "Numéro de Téléphone",
+      lblPickup: "Quartier de Départ",
+      lblDestination: "Quartier d'Arrivée",
+      lblMoveType: "Type de Déménagement",
+      lblTruck: "Taille du Camion",
+      lblDate: "Date de Déménagement",
+      submitBtn: "Envoyer la Demande",
+      optRes: "Résidentiel (Maison/Appartement)",
+      optCom: "Commercial / Bureau",
+      optSgl: "Objets Lourds Individuels",
+      optTrkSm: "Petit Camion Pick-up",
+      optTrkMed: "Fourgon de Taille Moyenne",
+      optTrkLg: "Grand Camion Canter",
+      alertSuccess: "🎉 Demande Envoyée!\nVotre ID de Réservation est le #",
+      alertSuccessSub: "\nVous pouvez suivre votre statut avec votre numéro de téléphone ou votre ID."
+    }
+  };
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    if (event && event.target) event.target.classList.add('active');
+
+    const t = translations[lang];
+    for (let key in t) {
+      const el = document.getElementById(key);
+      if (el) {
+        if (el.tagName === 'INPUT' || el.tagName === 'BUTTON') {
+          if (el.tagName === 'BUTTON' && el.type === 'submit') el.innerText = t[key];
+          else el.innerText = t[key];
+        } else {
+          el.innerText = t[key];
+        }
+      }
+    }
+  }
+
+  // Set min date to today
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('moveDate').setAttribute('min', today);
 
+  // SUPABASE INTEGRATION
   const SUPABASE_URL = "https://kjclnylnmfdgnadnmbfz.supabase.co";
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w';
-  
-  // Using supabaseClient prevents syntax conflict with global library
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   async function submitBooking(event) {
     event.preventDefault();
     const btn = document.getElementById('submitBtn');
-    btn.innerText = "Submitting...";
+    btn.innerText = currentLang === 'kn' ? 'Iriyo koherezwa...' : (currentLang === 'fr' ? 'Envoi en cours...' : 'Submitting...');
     btn.disabled = true;
 
     const bookingData = {
       full_name: document.getElementById('fullName').value.trim(),
       phone: document.getElementById('phone').value.trim(),
-      pickup: document.getElementById('pickup').value.trim(),
-      destination: document.getElementById('destination').value.trim(),
+      pickup: document.getElementById('pickup').value,
+      destination: document.getElementById('destination').value,
       move_type: document.getElementById('moveType').value,
       truck_size: document.getElementById('truckSize').value,
       move_date: document.getElementById('moveDate').value,
@@ -237,14 +456,15 @@
       if (error) throw error;
 
       const newBooking = data[0];
-      alert(`🎉 Booking Request Received!\nYour Booking ID is #${newBooking.id}.\nYou can track it on the Track Booking page using your Phone Number or Booking ID.`);
+      const t = translations[currentLang];
+      alert(`${t.alertSuccess}${newBooking.id}.${t.alertSuccessSub}`);
       document.getElementById('bookingForm').reset();
-      document.getElementById('moveDate').setAttribute('min', today); // Re-apply min date after reset
+      document.getElementById('moveDate').setAttribute('min', today);
     } catch (err) {
       console.error("Supabase Error:", err);
-      alert("Error submitting request: " + (err.message || "Failed to reach database. Verify table permissions in Supabase."));
+      alert("Error submitting request: " + (err.message || "Failed to submit booking."));
     } finally {
-      btn.innerText = "Submit Relocation Request";
+      btn.innerText = translations[currentLang].submitBtn;
       btn.disabled = false;
     }
   }
