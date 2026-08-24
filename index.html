@@ -3,587 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IMUKA - Premium Relocation & Moving Services</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --navy: #0A192F;
-      --navy-light: #112240;
-      --gold: #D4AF37;
-      --gold-hover: #C5A028;
-      --bg-cream: #FAF9F6;
-      --card-bg: #FFFFFF;
-      --text-dark: #0F172A;
-      --text-muted: #64748B;
-      --border: #E2E8F0;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg-cream); color: var(--text-dark); line-height: 1.6; }
-
-    /* NAVBAR */
-    nav {
-      background: var(--navy);
-      padding: 16px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 3px solid var(--gold);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    }
-    .logo { color: var(--gold); font-size: 1.8rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
-    .nav-right { display: flex; align-items: center; gap: 16px; }
-    
-    .nav-link { 
-      color: var(--gold); 
-      text-decoration: none; 
-      font-size: 0.85rem; 
-      font-weight: 700;
-      padding: 6px 14px;
-      border: 1px solid var(--gold);
-      border-radius: 20px;
-      transition: all 0.2s ease;
-    }
-    .nav-link:hover { background: var(--gold); color: var(--navy); }
-
-    .lang-switcher { display: flex; gap: 4px; background: var(--navy-light); padding: 4px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.3); }
-    .lang-btn {
-      background: transparent;
-      border: none;
-      color: #94A3B8;
-      padding: 4px 10px;
-      border-radius: 14px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 700;
-      transition: all 0.2s ease;
-    }
-    .lang-btn.active { background: var(--gold); color: var(--navy); }
-
-    /* HERO SECTION */
-    .hero {
-      background: linear-gradient(135deg, rgba(10, 25, 47, 0.94), rgba(17, 34, 64, 0.90)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
-      color: white;
-      text-align: center;
-      padding: 80px 20px 70px 20px;
-    }
-    .hero-badge { display: inline-block; background: rgba(212, 175, 55, 0.15); color: var(--gold); border: 1px solid var(--gold); padding: 6px 16px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 18px; text-transform: uppercase; }
-    .hero h1 { font-size: 2.6rem; color: #FFFFFF; font-weight: 800; max-width: 800px; margin: 0 auto 16px auto; line-height: 1.25; }
-    .hero h1 span { color: var(--gold); }
-    .hero p { max-width: 620px; margin: 0 auto 28px auto; color: #CBD5E1; font-size: 1.05rem; }
-    
-    .btn-hero {
-      background: var(--gold);
-      color: var(--navy);
-      padding: 14px 36px;
-      border-radius: 30px;
-      text-decoration: none;
-      font-weight: 800;
-      font-size: 1rem;
-      display: inline-block;
-      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-      transition: all 0.2s ease;
-    }
-    .btn-hero:hover { background: var(--gold-hover); transform: translateY(-2px); }
-
-    /* REVIEWS SECTION */
-    .reviews-container {
-      max-width: 1100px;
-      margin: 50px auto 30px auto;
-      padding: 0 20px;
-    }
-    .reviews-header { text-align: center; margin-bottom: 30px; }
-    .reviews-badge {
-      display: inline-block;
-      background: rgba(212, 175, 55, 0.15);
-      color: var(--gold);
-      border: 1px solid var(--gold);
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .reviews-header h2 { color: var(--navy); font-size: 2rem; font-weight: 800; }
-    .reviews-header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; }
-
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
-    .review-card {
-      background: var(--card-bg);
-      padding: 28px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      box-shadow: 0 8px 24px rgba(10, 25, 47, 0.05);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.2s ease;
-    }
-    .review-card:hover { transform: translateY(-4px); }
-    .review-stars { color: var(--gold); font-size: 1.2rem; margin-bottom: 12px; letter-spacing: 2px; }
-    .review-text { color: var(--text-dark); font-size: 0.95rem; font-style: italic; line-height: 1.6; margin-bottom: 20px; }
-    .review-author strong { display: block; color: var(--navy); font-size: 0.95rem; font-weight: 700; }
-    .review-author span { display: block; color: var(--text-muted); font-size: 0.82rem; margin-top: 2px; }
-
-    /* BOOKING FORM WRAPPER */
-    .form-wrapper { max-width: 760px; margin: 40px auto 80px auto; padding: 0 20px; position: relative; z-index: 10; }
-    .form-card {
-      background: var(--card-bg);
-      padding: 36px;
-      border-radius: 16px;
-      box-shadow: 0 12px 36px rgba(10, 25, 47, 0.12);
-      border: 1px solid var(--border);
-      border-top: 6px solid var(--navy);
-    }
-    .form-header { text-align: center; margin-bottom: 28px; }
-    .form-header h2 { color: var(--navy); font-size: 1.75rem; font-weight: 800; }
-    .form-header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 6px; }
-
-    /* DYNAMIC ESTIMATE BOX */
-    .estimate-box {
-      background: linear-gradient(135deg, #0A192F, #112240);
-      border: 2px solid var(--gold);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 28px;
-      color: white;
-      text-align: center;
-    }
-    .estimate-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); font-weight: 700; }
-    .estimate-amount { font-size: 2.2rem; font-weight: 800; color: #FFFFFF; margin: 6px 0; }
-    .estimate-disclaimer { font-size: 0.82rem; color: #94A3B8; max-width: 580px; margin: 0 auto; line-height: 1.4; }
-
-    /* FORM LAYOUT */
-    .section-title { font-size: 1rem; font-weight: 800; color: var(--navy); border-bottom: 2px solid var(--border); padding-bottom: 6px; margin: 24px 0 16px 0; text-transform: uppercase; letter-spacing: 0.5px; }
-    
-    .form-group { margin-bottom: 18px; }
-    label { display: block; font-weight: 700; color: var(--navy); margin-bottom: 6px; font-size: 0.88rem; }
-    
-    input, select, textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      background-color: #FAFAFA;
-      color: var(--text-dark);
-      transition: all 0.2s ease;
-      font-family: inherit;
-    }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); background-color: #FFFFFF; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); }
-    textarea { resize: vertical; min-height: 70px; }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } .hero h1 { font-size: 2.1rem; } .form-card { padding: 22px; } }
-
-    .btn-submit {
-      width: 100%;
-      padding: 16px;
-      background-color: var(--gold);
-      color: var(--navy);
-      border: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: 800;
-      cursor: pointer;
-      letter-spacing: 0.5px;
-      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
-      transition: all 0.2s ease;
-      margin-top: 14px;
-    }
-    .btn-submit:hover { background-color: var(--gold-hover); transform: translateY(-1px); }
-    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
-
-    footer { background: var(--navy); color: #94A3B8; text-align: center; padding: 24px; font-size: 0.85rem; border-top: 1px solid rgba(212, 175, 55, 0.2); }
-  </style>
+  <title>IMUKA - Book Your Move</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-100 min-h-screen py-12 px-4">
 
-  <nav>
-    <div class="logo">IMUKA</div>
-    <div class="nav-right">
-      <a href="status.html" class="nav-link" id="navTrack">Track Booking</a>
-      <div class="lang-switcher">
-        <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-        <button class="lang-btn" onclick="setLanguage('kn')">KN</button>
-        <button class="lang-btn" onclick="setLanguage('fr')">FR</button>
+  <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md border border-slate-200">
+    <h2 class="text-2xl font-bold text-slate-900 mb-2">Book Your Move with IMUKA</h2>
+    <p class="text-sm text-slate-500 mb-6">Transparent flat rates across Kigali. No hidden fees.</p>
+
+    <form id="booking-form" class="space-y-6">
+      <!-- 1. Move Size Selection -->
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-2">Select Move Size</label>
+        <select id="moveSize" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:outline-none">
+          <option value="small">Small Move (Studio / 1 Bedroom) - 35,000 RWF</option>
+          <option value="medium">Medium Move (2-3 Bedrooms) - 55,000 RWF</option>
+          <option value="large">Large Move (House / Office) - 85,000 RWF</option>
+        </select>
       </div>
-    </div>
-  </nav>
 
-  <div class="hero">
-    <span class="hero-badge" id="heroBadge">Kigali Relocation Partner</span>
-    <h1 id="heroTitle">Professional Relocation <span>Made Simple</span></h1>
-    <p id="heroSub">Get an instant price range estimate below. Our Kigali dispatch team confirms your locked-in quote within 15 minutes.</p>
-    <a href="#booking" class="btn-hero" id="heroBtn">Calculate Quote & Book</a>
+      <!-- 2. Floor Access Details -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Pickup Location Access</label>
+          <select id="pickupFloor" class="w-full p-2 border border-slate-300 rounded-md text-sm bg-white">
+            <option value="Ground Floor">Ground Floor</option>
+            <option value="Stairs (1st-2nd Floor)">Stairs (1st-2nd Floor)</option>
+            <option value="Stairs (3rd Floor+)">Stairs (3rd Floor+)</option>
+            <option value="Elevator Available">Has Elevator</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Dropoff Location Access</label>
+          <select id="dropoffFloor" class="w-full p-2 border border-slate-300 rounded-md text-sm bg-white">
+            <option value="Ground Floor">Ground Floor</option>
+            <option value="Stairs (1st-2nd Floor)">Stairs (1st-2nd Floor)</option>
+            <option value="Stairs (3rd Floor+)">Stairs (3rd Floor+)</option>
+            <option value="Elevator Available">Has Elevator</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 3. Optional Notes -->
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">Additional Details (Optional)</label>
+        <textarea id="specialNotes" rows="2" placeholder="Fragile items, narrow gates, heavy furniture..." class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none"></textarea>
+      </div>
+
+      <!-- 4. Price Card -->
+      <div class="p-4 bg-slate-900 text-white rounded-lg flex justify-between items-center">
+        <div>
+          <p class="text-xs text-slate-400 uppercase tracking-wide">Total Fixed Price</p>
+          <p id="priceDisplay" class="text-2xl font-bold">35,000 RWF</p>
+        </div>
+        <span class="text-xs bg-amber-500 text-slate-900 font-bold px-3 py-1 rounded-full">All Inclusive</span>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded-lg transition">
+        Request Move Now
+      </button>
+    </form>
   </div>
 
-  <div class="reviews-container">
-    <div class="reviews-header">
-      <span class="reviews-badge" id="revBadge">Trusted Across Kigali</span>
-      <h2 id="revTitle">What Our Customers Say</h2>
-      <p id="revSub">Read honest feedback from residential and business moves across Kigali.</p>
-    </div>
-
-    <div class="reviews-grid">
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">"IMUKA made our move from Remera to Nyarutarama effortless. The team arrived right on time and handled our fragile items with extreme care."</p>
-        <div class="review-author">
-          <strong>Keza A.</strong>
-          <span>Residential Move (Nyarutarama)</span>
-        </div>
-      </div>
-
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">"Fair pricing and very quick WhatsApp response after requesting a quote online. The Canter truck was spacious and the helpers worked fast."</p>
-        <div class="review-author">
-          <strong>Eric M.</strong>
-          <span>Office Relocation (Kacyiru)</span>
-        </div>
-      </div>
-
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">"Moving out of a 3rd-floor apartment in Kimironko without an elevator seemed impossible, but IMUKA's crew handled the heavy lifting smoothly!"</p>
-        <div class="review-author">
-          <strong>Divine K.</strong>
-          <span>Apartment Move (Kimironko)</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-wrapper" id="booking">
-    <div class="form-card">
-      <div class="form-header">
-        <h2 id="formTitle">Relocation Request Form</h2>
-        <p id="formSub">Fill in your move details to view your dynamic price range.</p>
-      </div>
-
-      <div class="estimate-box">
-        <div class="estimate-title" id="estTitle">Estimated Price Range</div>
-        <div class="estimate-amount" id="estimateDisplay">RWF 45,000 – 65,000</div>
-        <div class="estimate-disclaimer" id="estDisclaimer">
-          ℹ️ <strong>Note:</strong> This estimate adjusts as you select options. Your final price will be confirmed by IMUKA dispatch via call or WhatsApp within 15 minutes of submission.
-        </div>
-      </div>
-      
-      <form id="bookingForm" onsubmit="submitBooking(event)">
-        
-        <div class="section-title" id="sec1Title">1. Route & Schedule</div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label id="lblPickup">Pickup Neighborhood</label>
-            <select id="pickup" required onchange="calculateEstimate()">
-              <option value="" disabled selected>Select Neighborhood</option>
-              <option value="Gikondo">Gikondo</option>
-              <option value="Kimironko">Kimironko</option>
-              <option value="Kacyiru">Kacyiru</option>
-              <option value="Nyarutarama">Nyarutarama</option>
-              <option value="Remera">Remera</option>
-              <option value="Kiyovu">Kiyovu</option>
-              <option value="Kicukiro">Kicukiro</option>
-              <option value="Kanombe">Kanombe</option>
-              <option value="Nyamirambo">Nyamirambo</option>
-              <option value="Gisozi">Gisozi</option>
-              <option value="Kimihurura">Kimihurura</option>
-              <option value="Rebero">Rebero</option>
-              <option value="Kibagabaga">Kibagabaga</option>
-              <option value="Other / Outside Kigali">Other / Outside Kigali</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label id="lblDestination">Destination Neighborhood</label>
-            <select id="destination" required onchange="calculateEstimate()">
-              <option value="" disabled selected>Select Destination</option>
-              <option value="Gikondo">Gikondo</option>
-              <option value="Kimironko">Kimironko</option>
-              <option value="Kacyiru">Kacyiru</option>
-              <option value="Nyarutarama">Nyarutarama</option>
-              <option value="Remera">Remera</option>
-              <option value="Kiyovu">Kiyovu</option>
-              <option value="Kicukiro">Kicukiro</option>
-              <option value="Kanombe">Kanombe</option>
-              <option value="Nyamirambo">Nyamirambo</option>
-              <option value="Gisozi">Gisozi</option>
-              <option value="Kimihurura">Kimihurura</option>
-              <option value="Rebero">Rebero</option>
-              <option value="Kibagabaga">Kibagabaga</option>
-              <option value="Other / Outside Kigali">Other / Outside Kigali</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label id="lblDate">Preferred Move Date</label>
-          <input type="date" id="moveDate" required>
-        </div>
-
-        <div class="section-title" id="sec2Title">2. Truck & Access Details</div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label id="lblTruck">Truck Size Required</label>
-            <select id="truckSize" required onchange="calculateEstimate()">
-              <option value="Small Pickup" id="optTrkSm">Small Pickup Truck (Single items / Studio)</option>
-              <option value="Medium Van" id="optTrkMed" selected>Medium Moving Van (1-2 Bedroom)</option>
-              <option value="Large Canter" id="optTrkLg">Large Canter Truck (3+ Bed / Office)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label id="lblFloor">Floor / Stair Logistics</label>
-            <select id="floorInfo" required onchange="calculateEstimate()">
-              <option value="Ground Floor">Ground Floor to Ground Floor</option>
-              <option value="1st-2nd Floor (Stairs)">1st - 2nd Floor (Stairs)</option>
-              <option value="3rd+ Floor (Stairs)">3rd Floor or Higher (Stairs)</option>
-              <option value="Elevator Available">Elevator Available (Any Floor)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label id="lblSpecial">Special Items or Instructions (Optional)</label>
-          <textarea id="specialInstructions" placeholder="e.g., Heavy safe, piano, unpaved narrow access road, delicate glass furniture..."></textarea>
-        </div>
-
-        <div class="section-title" id="sec3Title">3. Contact Details</div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label id="lblFullName">Full Name</label>
-            <input type="text" id="fullName" required placeholder="e.g. Jean Mutanguha">
-          </div>
-          <div class="form-group">
-            <label id="lblPhone">WhatsApp / Phone Number</label>
-            <input type="tel" id="phone" required placeholder="0788XXXXXX or 079XXXXXXX">
-          </div>
-        </div>
-
-        <button type="submit" class="btn-submit" id="submitBtn">Submit Request for Confirmation</button>
-      </form>
-    </div>
-  </div>
-
-  <footer>
-    &copy; 2026 IMUKA Relocation Platform. All Rights Reserved.
-  </footer>
-
-<script>
-  let currentLang = 'en';
-
-  const translations = {
-    en: {
-      navTrack: "Track Booking",
-      heroBadge: "Kigali Relocation Partner",
-      heroTitle: "Professional Relocation Made Simple",
-      heroSub: "Get an instant price range estimate below. Our Kigali dispatch team confirms your locked-in quote within 15 minutes.",
-      heroBtn: "Calculate Quote & Book",
-      revBadge: "Trusted Across Kigali",
-      revTitle: "What Our Customers Say",
-      revSub: "Read honest feedback from residential and business moves across Kigali.",
-      formTitle: "Relocation Request Form",
-      formSub: "Fill in your move details to view your dynamic price range.",
-      estTitle: "Estimated Price Range",
-      estDisclaimer: "ℹ️ Note: This estimate adjusts as you select options. Your final price will be confirmed by IMUKA dispatch via call or WhatsApp within 15 minutes of submission.",
-      sec1Title: "1. Route & Schedule",
-      sec2Title: "2. Truck & Access Details",
-      sec3Title: "3. Contact Details",
-      lblPickup: "Pickup Neighborhood",
-      lblDestination: "Destination Neighborhood",
-      lblDate: "Preferred Move Date",
-      lblTruck: "Truck Size Required",
-      lblFloor: "Floor / Stair Logistics",
-      lblSpecial: "Special Items or Instructions (Optional)",
-      lblFullName: "Full Name",
-      lblPhone: "WhatsApp / Phone Number",
-      submitBtn: "Submit Request for Confirmation",
-      optTrkSm: "Small Pickup Truck (Single items / Studio)",
-      optTrkMed: "Medium Moving Van (1-2 Bedroom)",
-      optTrkLg: "Large Canter Truck (3+ Bed / Office)",
-      alertSuccess: "🎉 Request Received!\nYour Reference ID is #",
-      alertSuccessSub: "\nOur IMUKA dispatch team will call/WhatsApp you shortly with your confirmed quote."
-    },
-    kn: {
-      navTrack: "Gukurikirana Demande",
-      heroBadge: "Umushabitsi w'Ibyo Kwimuka i Kigali",
-      heroTitle: "Kwimuka Neza Mutagize Ikibazo",
-      heroSub: "Reba igiciro cy'agateganyo hano hasi. Ikipe yacu i Kigali iraguhamagara kuri WhatsApp mu minota 15 kwemeza igiciro cya nyuma.",
-      heroBtn: "Bara Igiciro Ubundi Usabe",
-      revBadge: "Abakiriya Badukunda i Kigali",
-      revTitle: "Icyo Abakiriya Batuvugaho",
-      revSub: "Isezerano n'ibyo abakimukiye i Kigali batuvugaho.",
-      formTitle: "Foromu yo Kwimuka",
-      formSub: "Uzuza ibijyanye n'urugendo rwawe urebe igiciro cy'agateganyo.",
-      estTitle: "Igiciro cy'Agateganyo",
-      estDisclaimer: "ℹ️ Ikitonderwa: Iki giciro gihinduka nk'uko uhitamo. Igiciro cya nyuma cyemezwa na IMUKA kuri telefoni cyangwa WhatsApp mu minota 15.",
-      sec1Title: "1. Aho Uturuka n'Aho Ujya",
-      sec2Title: "2. Imodoka n'Amashyiga / Etaji",
-      sec3Title: "3. Imyirondoro Yabyo",
-      lblPickup: "Aho Uturuka (Kigali)",
-      lblDestination: "Aho Ujya (Kigali)",
-      lblDate: "Itariki yo Kwimuka",
-      lblTruck: "Ubwoko bw'Imodoka Ukeneye",
-      lblFloor: "Amashyiga / Etaji yo Kuzamura",
-      lblSpecial: "Ibyitonderwa / Ibintu Biremereye (ibindi)",
-      lblFullName: "Amazina Yombi",
-      lblPhone: "Nimero ya WhatsApp / Telefoni",
-      submitBtn: "Ohereza Demande yo Kwemezwa",
-      optTrkSm: "Imodoka Ntoya Pickup (Ibintu bike / Studio)",
-      optTrkMed: "Imodoka Meshiyo Van (Inzu y'Ibyumba 1-2)",
-      optTrkLg: "Kanyon / Canter Nini (Inzu Nini / Ibiro)",
-      alertSuccess: "🎉 Demande Yasterewe!\nNimero ya Referansi yawe ni #",
-      alertSuccessSub: "\nIkipe yacu iragukhamagara kuri telefoni/WhatsApp mukanya gufata icyemezo cya nyuma."
-    },
-    fr: {
-      navTrack: "Suivre la Réservation",
-      heroBadge: "Partenaire de Déménagement à Kigali",
-      heroTitle: "Déménagement Professionnel Simplifié",
-      heroSub: "Obtenez une estimation instantanée ci-dessous. Notre équipe de Kigali confirmera votre prix final dans les 15 minutes.",
-      heroBtn: "Calculer le Devis & Réserver",
-      revBadge: "Approuvé à Kigali",
-      revTitle: "Avis de nos Clients",
-      revSub: "Lisez les témoignages de nos clients résidentiels et commerciaux à Kigali.",
-      formTitle: "Formulaire de Demande de Déménagement",
-      formSub: "Remplissez vos détails pour voir votre fourchette de prix dynamique.",
-      estTitle: "Fourchette de Prix Estimée",
-      estDisclaimer: "ℹ️ Remarque: Cette estimation s'ajuste selon vos choix. Votre prix final sera confirmé par IMUKA par téléphone ou WhatsApp dans les 15 minutes.",
-      sec1Title: "1. Trajet & Horaires",
-      sec2Title: "2. Camion & Détails d'Accès",
-      sec3Title: "3. Coordonnées",
-      lblPickup: "Quartier de Départ",
-      lblDestination: "Quartier d'Arrivée",
-      lblDate: "Date de Déménagement",
-      lblTruck: "Taille du Camion Requise",
-      lblFloor: "Logistique d'Étage / Escaliers",
-      lblSpecial: "Articles Spéciaux ou Instructions (Optionnel)",
-      lblFullName: "Nom Complet",
-      lblPhone: "Numéro WhatsApp / Téléphone",
-      submitBtn: "Soumettre la Demande pour Confirmation",
-      optTrkSm: "Petit Camion Pick-up (Studio / Objets uniques)",
-      optTrkMed: "Fourgon Moyen (1-2 Chambres)",
-      optTrkLg: "Grand Camion Canter (3+ Chambres / Bureau)",
-      alertSuccess: "🎉 Demande Reçue!\nVotre ID de Référence est le #",
-      alertSuccessSub: "\nNotre équipe IMUKA vous contactera par téléphone/WhatsApp sous peu pour confirmer votre devis."
-    }
-  };
-
-  function calculateEstimate() {
-    const truck = document.getElementById('truckSize').value;
-    const floor = document.getElementById('floorInfo').value;
-    const pickup = document.getElementById('pickup').value;
-    const dest = document.getElementById('destination').value;
-
-    let minBase = 35000;
-    let maxBase = 50000;
-
-    if (truck === 'Medium Van') {
-      minBase = 55000;
-      maxBase = 75000;
-    } else if (truck === 'Large Canter') {
-      minBase = 90000;
-      maxBase = 120000;
-    }
-
-    if (floor === '1st-2nd Floor (Stairs)') {
-      minBase += 10000;
-      maxBase += 15000;
-    } else if (floor === '3rd+ Floor (Stairs)') {
-      minBase += 20000;
-      maxBase += 25000;
-    } else if (floor === 'Elevator Available') {
-      minBase += 5000;
-      maxBase += 5000;
-    }
-
-    if (pickup === 'Other / Outside Kigali' || dest === 'Other / Outside Kigali') {
-      minBase += 25000;
-      maxBase += 45000;
-    }
-
-    document.getElementById('estimateDisplay').innerText = 
-      `RWF ${minBase.toLocaleString()} – ${maxBase.toLocaleString()}`;
-  }
-
-  function setLanguage(lang) {
-    currentLang = lang;
-    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-    if (event && event.target) event.target.classList.add('active');
-
-    const t = translations[lang];
-    for (let key in t) {
-      const el = document.getElementById(key);
-      if (el) {
-        if (el.tagName === 'INPUT' || el.tagName === 'BUTTON') {
-          el.innerText = t[key];
-        } else {
-          el.innerText = t[key];
-        }
-      }
-    }
-  }
-
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('moveDate').setAttribute('min', today);
-
-  const SUPABASE_URL = "https://kjclnylnmfdgnadnmbfz.supabase.co";
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w';
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  async function submitBooking(event) {
-    event.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    btn.innerText = currentLang === 'kn' ? 'Iriyo koherezwa...' : (currentLang === 'fr' ? 'Envoi en cours...' : 'Submitting Request...');
-    btn.disabled = true;
-
-    const estimatedRangeText = document.getElementById('estimateDisplay').innerText;
-
-    const bookingData = {
-      full_name: document.getElementById('fullName').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
-      pickup: document.getElementById('pickup').value,
-      destination: document.getElementById('destination').value,
-      truck_size: document.getElementById('truckSize').value,
-      floor_info: document.getElementById('floorInfo').value,
-      special_instructions: document.getElementById('specialInstructions').value.trim(),
-      estimated_range: estimatedRangeText,
-      move_date: document.getElementById('moveDate').value,
-      status: 'Pending Negotiation'
-    };
-
-    try {
-      const { data, error } = await supabaseClient
-        .from('bookings')
-        .insert([bookingData])
-        .select();
-
-      if (error) throw error;
-
-      const newBooking = data[0];
-      const t = translations[currentLang];
-      alert(`${t.alertSuccess}${newBooking.id}.${t.alertSuccessSub}`);
-      document.getElementById('bookingForm').reset();
-      document.getElementById('moveDate').setAttribute('min', today);
-      calculateEstimate();
-    } catch (err) {
-      console.error("Supabase Error:", err);
-      alert("Error submitting request: " + (err.message || "Failed to submit booking. Please check database configuration."));
-    } finally {
-      btn.innerText = translations[currentLang].submitBtn;
-      btn.disabled = false;
-    }
-  }
-
-  calculateEstimate();
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
