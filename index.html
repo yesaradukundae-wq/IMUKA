@@ -10,14 +10,15 @@
       theme: {
         extend: {
           colors: {
-            charcoal: {
-              DEFAULT: '#1C1C1E',
-              light: '#2C2C2E',
+            navy: {
+              DEFAULT: '#0F172A', // Rich Deep Navy
+              dark: '#0A0F1D',
+              card: '#1E293B',
             },
             champagne: {
-              DEFAULT: '#F4E3C1',
-              hover: '#E5D2A8',
-              accent: '#FAF0DC',
+              DEFAULT: '#F59E0B', // Warm Champagne Gold
+              light: '#FDE68A',
+              hover: '#D97706',
             }
           }
         }
@@ -25,67 +26,80 @@
     }
   </script>
 </head>
-<body class="bg-charcoal text-slate-100 min-h-screen font-sans">
+<body class="bg-navy text-slate-100 min-h-screen font-sans">
 
-  <header class="border-b border-zinc-800 bg-charcoal/90 backdrop-blur sticky top-0 z-50">
+  <!-- Header / Navigation -->
+  <header class="border-b border-slate-800 bg-navy/90 backdrop-blur sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
       <div class="flex items-center gap-2">
         <span class="text-2xl font-black tracking-wider text-champagne">IMUKA</span>
-        <span class="text-xs bg-zinc-800 text-champagne px-2 py-0.5 rounded border border-champagne/20">LOGISTICS</span>
+        <span class="text-xs bg-slate-800 text-champagne-light px-2 py-0.5 rounded border border-champagne/20">LOGISTICS</span>
       </div>
-      <a href="#book" class="bg-champagne hover:bg-champagne-hover text-charcoal font-bold px-4 py-2 rounded-lg text-sm transition">
+      <a href="#book" class="bg-champagne hover:bg-champagne-hover text-navy font-bold px-5 py-2 rounded-lg text-sm transition shadow-lg">
         Book Move
       </a>
     </div>
   </header>
 
-  <section class="max-w-4xl mx-auto text-center px-6 pt-12 pb-8">
-    <span class="inline-block px-3 py-1 bg-zinc-800 border border-champagne/30 text-champagne text-xs font-semibold rounded-full mb-4">
-      Kigali's Premier Relocation Partner
-    </span>
-    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
-      Stress-Free Moving, <br class="hidden md:block"/>
-      <span class="text-champagne">Delivered with Precision.</span>
-    </h1>
-    <p class="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto mb-8">
-      Professional, transparent, and seamless residential and office relocations across Kigali. Zero hidden fees.
-    </p>
+  <!-- Hero Section with House Background Image -->
+  <section class="relative bg-cover bg-center bg-no-repeat py-20 px-6 border-b border-slate-800" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop');">
+    <!-- Dark Navy Gradient Overlay for legibility -->
+    <div class="absolute inset-0 bg-gradient-to-b from-navy-dark/85 via-navy/90 to-navy"></div>
 
-    <div class="grid grid-cols-3 gap-4 max-w-xl mx-auto mb-10 text-center">
-      <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
-        <p class="text-champagne font-bold text-sm">Fixed Rates</p>
-        <p class="text-xs text-zinc-500">Upfront Quotes</p>
-      </div>
-      <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
-        <p class="text-champagne font-bold text-sm">Verified Crew</p>
-        <p class="text-xs text-zinc-500">Safe & Trained</p>
-      </div>
-      <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800">
-        <p class="text-champagne font-bold text-sm">On-Time</p>
-        <p class="text-xs text-zinc-500">Guaranteed Schedule</p>
+    <div class="relative max-w-4xl mx-auto text-center z-10">
+      <span class="inline-block px-4 py-1.5 bg-slate-800/80 border border-champagne/40 text-champagne-light text-xs font-semibold rounded-full mb-6 backdrop-blur">
+        Kigali's Premier Relocation Partner
+      </span>
+      
+      <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight text-white drop-shadow-md">
+        Stress-Free Moving, <br class="hidden md:block"/>
+        <span class="text-champagne">Delivered with Precision.</span>
+      </h1>
+      
+      <p class="text-slate-300 text-base md:text-xl max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+        Professional, transparent, and seamless residential and office relocations across Kigali. Zero hidden fees.
+      </p>
+
+      <!-- Value Badges -->
+      <div class="grid grid-cols-3 gap-4 max-w-xl mx-auto text-center">
+        <div class="p-4 rounded-xl bg-navy-card/80 border border-slate-700/60 backdrop-blur shadow-md">
+          <p class="text-champagne font-bold text-sm md:text-base">Fixed Rates</p>
+          <p class="text-xs text-slate-400">Upfront Quotes</p>
+        </div>
+        <div class="p-4 rounded-xl bg-navy-card/80 border border-slate-700/60 backdrop-blur shadow-md">
+          <p class="text-champagne font-bold text-sm md:text-base">Verified Crew</p>
+          <p class="text-xs text-slate-400">Safe & Trained</p>
+        </div>
+        <div class="p-4 rounded-xl bg-navy-card/80 border border-slate-700/60 backdrop-blur shadow-md">
+          <p class="text-champagne font-bold text-sm md:text-base">On-Time</p>
+          <p class="text-xs text-slate-400">Guaranteed Schedule</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="book" class="max-w-xl mx-auto px-4 pb-16">
-    <div class="bg-zinc-900 p-6 md:p-8 rounded-2xl border border-zinc-800 shadow-2xl">
+  <!-- Main Booking Section -->
+  <section id="book" class="max-w-xl mx-auto px-4 py-16">
+    <div class="bg-navy-card p-6 md:p-8 rounded-2xl border border-slate-700 shadow-2xl">
       <h2 class="text-2xl font-bold text-white mb-1">Book Your Move</h2>
-      <p class="text-sm text-zinc-400 mb-6">Select your specs to get an instant quote.</p>
+      <p class="text-sm text-slate-400 mb-6">Select your specs to get an instant quote.</p>
 
       <form id="booking-form" class="space-y-6">
+        <!-- 1. Move Size Selection -->
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-2">Select Move Size</label>
-          <select id="moveSize" class="w-full p-3 bg-charcoal text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-champagne focus:outline-none text-sm">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">Select Move Size</label>
+          <select id="moveSize" class="w-full p-3 bg-navy text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-champagne focus:outline-none text-sm">
             <option value="small">Small Move (Studio / 1 Bedroom) - 35,000 RWF</option>
             <option value="medium">Medium Move (2-3 Bedrooms) - 55,000 RWF</option>
             <option value="large">Large Move (House / Office) - 85,000 RWF</option>
           </select>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-charcoal rounded-xl border border-zinc-800">
+        <!-- 2. Floor Access Details -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-navy rounded-xl border border-slate-700">
           <div>
-            <label class="block text-xs font-semibold text-zinc-400 mb-1">Pickup Access</label>
-            <select id="pickupFloor" class="w-full p-2.5 bg-zinc-900 text-white border border-zinc-700 rounded-md text-xs">
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Pickup Access</label>
+            <select id="pickupFloor" class="w-full p-2.5 bg-navy-card text-white border border-slate-600 rounded-md text-xs">
               <option value="Ground Floor">Ground Floor</option>
               <option value="Stairs (1st-2nd Floor)">Stairs (1st-2nd Floor)</option>
               <option value="Stairs (3rd Floor+)">Stairs (3rd Floor+)</option>
@@ -94,8 +108,8 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-zinc-400 mb-1">Dropoff Access</label>
-            <select id="dropoffFloor" class="w-full p-2.5 bg-zinc-900 text-white border border-zinc-700 rounded-md text-xs">
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Dropoff Access</label>
+            <select id="dropoffFloor" class="w-full p-2.5 bg-navy-card text-white border border-slate-600 rounded-md text-xs">
               <option value="Ground Floor">Ground Floor</option>
               <option value="Stairs (1st-2nd Floor)">Stairs (1st-2nd Floor)</option>
               <option value="Stairs (3rd Floor+)">Stairs (3rd Floor+)</option>
@@ -104,56 +118,63 @@
           </div>
         </div>
 
+        <!-- 3. Optional Notes -->
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">Additional Details (Optional)</label>
-          <textarea id="specialNotes" rows="2" placeholder="Fragile items, narrow gates, heavy furniture..." class="w-full p-3 bg-charcoal text-white border border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-champagne focus:outline-none"></textarea>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Additional Details (Optional)</label>
+          <textarea id="specialNotes" rows="2" placeholder="Fragile items, narrow gates, heavy furniture..." class="w-full p-3 bg-navy text-white border border-slate-600 rounded-lg text-sm focus:ring-2 focus:ring-champagne focus:outline-none"></textarea>
         </div>
 
-        <div class="p-4 bg-charcoal rounded-xl border border-zinc-800 flex justify-between items-center">
+        <!-- 4. Price Card -->
+        <div class="p-4 bg-navy rounded-xl border border-slate-700 flex justify-between items-center shadow-inner">
           <div>
-            <p class="text-xs text-zinc-400 uppercase tracking-wide">Total Fixed Price</p>
+            <p class="text-xs text-slate-400 uppercase tracking-wide">Total Fixed Price</p>
             <p id="priceDisplay" class="text-2xl font-black text-champagne">35,000 RWF</p>
           </div>
-          <span class="text-xs bg-champagne text-charcoal font-bold px-3 py-1 rounded-full">All Inclusive</span>
+          <span class="text-xs bg-champagne text-navy font-bold px-3 py-1 rounded-full">All Inclusive</span>
         </div>
 
-        <button type="submit" class="w-full py-3.5 bg-champagne hover:bg-champagne-hover text-charcoal font-bold rounded-lg transition text-base">
+        <!-- Submit Button -->
+        <button type="submit" class="w-full py-4 bg-champagne hover:bg-champagne-hover text-navy font-bold rounded-xl transition text-base shadow-lg">
           Request Move Now
         </button>
       </form>
     </div>
   </section>
 
-  <section class="max-w-4xl mx-auto px-6 pb-20 border-t border-zinc-800 pt-12">
-    <h3 class="text-xl font-bold text-center mb-8 text-zinc-200">Trusted by Kigali Residents</h3>
+  <!-- Customer Reviews Section -->
+  <section class="max-w-4xl mx-auto px-6 pb-20 border-t border-slate-800 pt-12">
+    <h3 class="text-xl font-bold text-center mb-8 text-white">Trusted by Kigali Residents</h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       
-      <div class="bg-zinc-900 p-6 rounded-xl border border-zinc-800">
+      <!-- Review 1 -->
+      <div class="bg-navy-card p-6 rounded-xl border border-slate-700 shadow-md">
         <div class="flex text-champagne mb-2">★★★★★</div>
-        <p class="text-sm text-zinc-300 italic mb-4">
+        <p class="text-sm text-slate-300 italic mb-4">
           "The team arrived right on time at my apartment in Kimihurura. No hidden extra costs for stairs—exactly 35,000 RWF as quoted on the site!"
         </p>
         <div>
           <p class="font-bold text-sm text-white">Jean-Paul M.</p>
-          <p class="text-xs text-zinc-500">Kigali Resident</p>
+          <p class="text-xs text-slate-400">Kigali Resident</p>
         </div>
       </div>
 
-      <div class="bg-zinc-900 p-6 rounded-xl border border-zinc-800">
+      <!-- Review 2 -->
+      <div class="bg-navy-card p-6 rounded-xl border border-slate-700 shadow-md">
         <div class="flex text-champagne mb-2">★★★★★</div>
-        <p class="text-sm text-zinc-300 italic mb-4">
+        <p class="text-sm text-slate-300 italic mb-4">
           "Moved our office furniture across Nyarutarama smoothly. Highly professional driver and loading team. IMUKA made everything effortless."
         </p>
         <div>
           <p class="font-bold text-sm text-white">Sarah K.</p>
-          <p class="text-xs text-zinc-500">Business Owner</p>
+          <p class="text-xs text-slate-400">Business Owner</p>
         </div>
       </div>
 
     </div>
   </section>
 
-  <footer class="border-t border-zinc-800 py-6 text-center text-xs text-zinc-500">
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
     <p>© 2026 IMUKA Relocation & Logistics Services. All rights reserved.</p>
   </footer>
 
