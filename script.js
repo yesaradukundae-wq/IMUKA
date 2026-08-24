@@ -1,118 +1,35 @@
-// --- Supabase Credentials ---
-const SUPABASE_URL = 'https://kjclnylnmfdgnadnmbfz.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY2xueWxubWZkZ25hZG5tYmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNTg1NTksImV4cCI6MjEwMjkzNDU1OX0.dLwbaU2-Nr2fPeaHwm7_h2GvMwbx8uMrxjqOTdpTO9w';
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// --- Multilingual Translations ---
-const translations = {
-  en: {
-    heroTitle: "Seamless Relocation in Kigali",
-    heroDesc: "Submit your move details and get your confirmed quote in under two minutes.",
-    labelName: "Full Name",
-    labelPhone: "Phone Number",
-    labelPickup: "Pickup Neighborhood",
-    labelDropoff: "Destination Neighborhood",
-    labelMoveType: "Type of Move",
-    labelTruck: "Truck Size Required",
-    labelDate: "Move Date",
-    labelStairs: "Stairs required at pickup or destination?",
-    estTitle: "Rates & Pricing",
-    estAmount: "Starting from 80,000 RWF",
-    btnSubmit: "Confirm Booking Request"
-  },
-  rw: {
-    heroTitle: "Kwimuka Biraworoheye i Kigali",
-    heroDesc: "Ohereza amakuru yo kwimuka ubone igiciro kyo kwemeza mu minota ibiri gusa.",
-    labelName: "Amasina Yombi",
-    labelPhone: "Nimero ya Telefone",
-    labelPickup: "Aho Upakurira",
-    labelDropoff: "Aho Upakururira",
-    labelMoveType: "Ubwoko bwo Kwimuka",
-    labelTruck: "Ingano y'Imodoka",
-    labelDate: "Ibitariki byo Kwimuka",
-    labelStairs: "Harimo Ingarani/Amashyiga?",
-    estTitle: "Ibiciro",
-    estAmount: "Bihagaze ku 80,000 RWF",
-    btnSubmit: "Saba Kwimuka"
-  },
-  fr: {
-    heroTitle: "Déménagement Facile à Kigali",
-    heroDesc: "Soumettez vos détails et obtenez votre devis confirmé en moins de deux minutes.",
-    labelName: "Nom Complet",
-    labelPhone: "Numéro de Téléphone",
-    labelPickup: "Quartier de Départ",
-    labelDropoff: "Quartier d'Arrivée",
-    labelMoveType: "Type de Déménagement",
-    labelTruck: "Taille du Camion",
-    labelDate: "Date du Déménagement",
-    labelStairs: "Escaliers au départ ou à l'arrivée?",
-    estTitle: "Tarification",
-    estAmount: "À partir de 80 000 RWF",
-    btnSubmit: "Confirmer la Réservation"
-  }
+// Fixed flat rates in RWF
+const PRICING_TIERS = {
+  small: 35000,
+  medium: 55000,
+  large: 85000
 };
 
-let currentLang = 'en';
+document.addEventListener('DOMContentLoaded', () => {
+  const moveSizeSelect = document.getElementById('moveSize');
+  const priceDisplay = document.getElementById('priceDisplay');
+  const bookingForm = document.getElementById('booking-form');
 
-function switchLanguage(lang, evt) {
-  currentLang = lang;
-  document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-  if (evt && evt.target) evt.target.classList.add('active');
-
-  document.querySelectorAll('[data-i18n]').forEach(elem => {
-    const key = elem.getAttribute('data-i18n');
-    if (translations[lang] && translations[lang][key]) {
-      elem.innerText = translations[lang][key];
-    }
+  // Update displayed price whenever customer changes move size
+  moveSizeSelect.addEventListener('change', (e) => {
+    const selectedSize = e.target.value;
+    const price = PRICING_TIERS[selectedSize];
+    priceDisplay.textContent = price.toLocaleString() + ' RWF';
   });
-}
 
-// Set minimum move date to today
-const dateInput = document.getElementById('moveDate');
-if (dateInput) {
-  dateInput.min = new Date().toISOString().split('T')[0];
-}
+  // Handle Form Submission
+  bookingForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-// --- Form Submission ---
-document.getElementById('imukaBookingForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
+    const bookingData = {
+      moveSize: moveSizeSelect.value,
+      price: PRICING_TIERS[moveSizeSelect.value],
+      pickupFloor: document.getElementById('pickupFloor').value,
+      dropoffFloor: document.getElementById('dropoffFloor').value,
+      specialNotes: document.getElementById('specialNotes').value,
+    };
 
-  const payload = {
-    customer_name: document.getElementById('custName').value,
-    customer_phone: document.getElementById('custPhone').value,
-    pickup_location: document.getElementById('pickupLoc').value,
-    dropoff_location: document.getElementById('dropoffLoc').value,
-    move_type: document.getElementById('moveType').value,
-    truck_size: document.getElementById('truckSize').value,
-    has_stairs: document.getElementById('hasStairs').checked,
-    pickup_date: document.getElementById('moveDate').value,
-    estimated_price_min: 80000,
-    estimated_price_max: 500000
-  };
-
-  const submitBtn = e.target.querySelector('.btn-submit');
-  submitBtn.innerText = "Processing...";
-  submitBtn.disabled = true;
-
-  const { data, error } = await supabaseClient
-    .from('bookings')
-    .insert([payload])
-    .select();
-
-  if (error) {
-    alert("Unable to process automatically. Redirecting to WhatsApp...");
-    console.error("Supabase Error:", error);
-    submitBtn.innerText = translations[currentLang].btnSubmit;
-    submitBtn.disabled = false;
-  } else {
-    const booking = data[0];
-    const refCode = booking.booking_ref;
-
-    alert(`🎉 Success! Booking Reference: ${refCode}`);
-
-    // Pre-filled WhatsApp Message
-    const waText = `Hello IMUKA! I just submitted a move request on the website.\nReference: ${refCode}\nFrom: ${payload.pickup_location}\nTo: ${payload.dropoff_location}\nDate: ${payload.pickup_date}`;
-    window.location.href = `https://wa.me/250791639756?text=${encodeURIComponent(waText)}`;
-  }
+    console.log('Booking Data:', bookingData);
+    alert(`Thank you! Your move request for ${bookingData.price.toLocaleString()} RWF has been received.`);
+  });
 });
